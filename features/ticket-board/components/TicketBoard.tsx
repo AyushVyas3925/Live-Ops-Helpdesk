@@ -101,20 +101,20 @@ export default function TicketBoard() {
       </div>
 
       {/* ════════════════════════ STATS ROW ════════════════════════ */}
-      <div className="stats-row" style={{ borderBottom: '1px solid #E5E7EB' }}>
-        <div className="stat-cell">
+      <div className="stats-row">
+        <div className="stat-cell stat-cell-critical">
           <span className="text-[22px] font-bold tabular-nums" style={{ color: '#DC2626' }}>{criticalCount}</span>
           <span className="text-[11px] uppercase tracking-wider" style={{ color: '#6B7280' }}>Critical</span>
         </div>
-        <div className="stat-cell">
+        <div className="stat-cell stat-cell-open">
           <span className="text-[22px] font-bold tabular-nums" style={{ color: '#D97706' }}>{openCount}</span>
           <span className="text-[11px] uppercase tracking-wider" style={{ color: '#6B7280' }}>Open</span>
         </div>
-        <div className="stat-cell">
+        <div className="stat-cell stat-cell-in-progress">
           <span className="text-[22px] font-bold tabular-nums" style={{ color: '#2563EB' }}>{inProgCount}</span>
           <span className="text-[11px] uppercase tracking-wider" style={{ color: '#6B7280' }}>In Progress</span>
         </div>
-        <div className="stat-cell">
+        <div className="stat-cell stat-cell-active">
           <span className="text-[22px] font-bold tabular-nums" style={{ color: '#16A34A' }}>{connectedAgents.length}</span>
           <span className="text-[11px] uppercase tracking-wider" style={{ color: '#6B7280' }}>Agents Active</span>
         </div>
@@ -126,10 +126,7 @@ export default function TicketBoard() {
         style={{ background: '#FFFFFF', borderBottom: '1px solid #E5E7EB', padding: '12px 20px' }}
       >
         {/* Search */}
-        <div
-          className="flex items-center gap-2 flex-1 h-9 px-3 rounded-lg"
-          style={{ minWidth: 180, background: '#FFFFFF', border: '1px solid #E5E7EB' }}
-        >
+        <div className="search-container">
           <i className="ti ti-search" style={{ color: '#9CA3AF', fontSize: 15 }} aria-hidden="true" />
           <input
             id="ticket-search"
@@ -162,12 +159,7 @@ export default function TicketBoard() {
         <button
           id="new-ticket-demo-btn"
           onClick={simulateTicket}
-          className="flex items-center gap-1.5 text-white text-xs font-semibold rounded-lg cursor-pointer transition-colors ml-auto"
-          style={{ height: 36, padding: '0 14px', background: '#2563EB', border: 'none' }}
-          onMouseEnter={e => (e.currentTarget.style.background = '#1D4ED8')}
-          onMouseLeave={e => (e.currentTarget.style.background = '#2563EB')}
-          onMouseDown={e  => (e.currentTarget.style.transform  = 'scale(0.97)')}
-          onMouseUp={e    => (e.currentTarget.style.transform  = '')}
+          className="btn-simulate-ticket ml-auto"
         >
           <i className="ti ti-plus" style={{ fontSize: 14 }} aria-hidden="true" />
           Simulate Ticket

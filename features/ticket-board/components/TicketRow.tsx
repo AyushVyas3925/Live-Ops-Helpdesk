@@ -83,7 +83,6 @@ export default function TicketRow({ ticket, lock, isNew, onEdit, onUnlock }: Tic
         borderBottom: '1px solid #F1F5F9',
         alignItems: 'center',
         cursor: isLockedByOther ? 'not-allowed' : 'pointer',
-        transition: 'background 0.2s, border-color 0.2s',
         position: 'relative',
       }}
     >
@@ -217,12 +216,7 @@ export default function TicketRow({ ticket, lock, isNew, onEdit, onUnlock }: Tic
             disabled
             aria-disabled="true"
             aria-label={`Ticket ${ticket.id} is locked by ${lock?.agentName}`}
-            style={{
-              padding: '5px 13px', borderRadius: 6, fontSize: 12, fontWeight: 600,
-              border: 'none', cursor: 'not-allowed', opacity: 0.5,
-              display: 'flex', alignItems: 'center', gap: 5,
-              background: '#F3F4F6', color: '#9CA3AF',
-            }}
+            className="btn-action-locked"
           >
             <i className="ti ti-lock" style={{ fontSize: 12 }} aria-hidden="true" />
             Locked
@@ -233,14 +227,7 @@ export default function TicketRow({ ticket, lock, isNew, onEdit, onUnlock }: Tic
             id={`edit-btn-${ticket.id}`}
             onClick={() => onUnlock(ticket.id)}
             aria-label={`Release lock on ticket ${ticket.id}`}
-            style={{
-              padding: '5px 13px', borderRadius: 6, fontSize: 12, fontWeight: 600,
-              cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 5,
-              background: '#DBEAFE', color: '#1D4ED8', border: '1px solid #93C5FD',
-              transition: 'background 0.15s',
-            }}
-            onMouseEnter={e => (e.currentTarget.style.background = '#BFDBFE')}
-            onMouseLeave={e => (e.currentTarget.style.background = '#DBEAFE')}
+            className="btn-action-release"
           >
             <i className="ti ti-lock-open" style={{ fontSize: 12 }} aria-hidden="true" />
             Release
@@ -251,14 +238,7 @@ export default function TicketRow({ ticket, lock, isNew, onEdit, onUnlock }: Tic
             id={`edit-btn-${ticket.id}`}
             onClick={() => onEdit(ticket)}
             aria-label={`Edit ticket ${ticket.id}`}
-            style={{
-              padding: '5px 13px', borderRadius: 6, fontSize: 12, fontWeight: 600,
-              border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 5,
-              background: '#2563EB', color: '#fff',
-              transition: 'background 0.15s',
-            }}
-            onMouseEnter={e => (e.currentTarget.style.background = '#1D4ED8')}
-            onMouseLeave={e => (e.currentTarget.style.background = '#2563EB')}
+            className="btn-action-edit"
           >
             <i className="ti ti-edit" style={{ fontSize: 12 }} aria-hidden="true" />
             Edit

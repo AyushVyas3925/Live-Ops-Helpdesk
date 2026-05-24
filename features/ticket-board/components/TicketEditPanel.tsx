@@ -38,27 +38,14 @@ export default function TicketEditPanel({ ticket, onSave, onClose, unlockTicket 
       <div
         onClick={() => { unlockTicket(ticket.id); onClose(); }}
         aria-hidden="true"
-        style={{
-          position: 'fixed', inset: 0,
-          background: 'rgba(0,0,0,0.4)',
-          zIndex: 30,
-          transition: 'opacity 0.2s',
-        }}
+        className="edit-panel-backdrop"
       />
 
       {/* Side Panel */}
       <aside
         role="complementary"
         aria-label={`Editing ticket ${ticket.id}`}
-        style={{
-          position: 'fixed', right: 0, top: 0,
-          height: '100%', width: 480,
-          background: '#FFFFFF',
-          borderLeft: '1px solid #E5E7EB',
-          boxShadow: '0 20px 60px rgba(0,0,0,0.15)',
-          zIndex: 40,
-          display: 'flex', flexDirection: 'column',
-        }}
+        className="edit-panel-aside"
       >
         {/* Panel Header */}
         <div
