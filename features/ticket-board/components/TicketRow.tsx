@@ -1,8 +1,18 @@
 'use client';
 
-import { formatDistanceToNow } from 'date-fns';
 import type { Ticket, LockState } from '@/shared/types/ticket.types';
 import { useAgent } from '@/shared/context/AgentContext';
+
+function formatShortTime(dateString: string): string {
+  const diffMs = Date.now() - new Date(dateString).getTime();
+  const diffMins = Math.floor(diffMs / 60000);
+  if (diffMins < 1) return '<1m ago';
+  const diffHrs = Math.floor(diffMins / 60);
+  if (diffHrs < 1) return `${diffMins}m ago`;
+  const diffDays = Math.floor(diffHrs / 24);
+  if (diffDays < 1) return `${diffHrs}h ago`;
+  return `${diffDays}d ago`;
+}
 
 /* ── Priority pill styles (light theme) ── */
 const PRIORITY_PILL: Record<string, { background: string; color: string }> = {
@@ -204,7 +214,7 @@ export default function TicketRow({ ticket, lock, isNew, onEdit, onUnlock }: Tic
 
       {/* Created time */}
       <span style={{ fontFamily: 'ui-monospace, monospace', fontSize: 11, color: '#9CA3AF', whiteSpace: 'nowrap' }}>
-        {formatDistanceToNow(new Date(ticket.createdAt), { addSuffix: true })}
+        {formatShortTime(ticket.createdAt)}
       </span>
 
       {/* Action button — 3 states */}
