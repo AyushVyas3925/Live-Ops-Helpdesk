@@ -2,9 +2,19 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { createPortal } from 'react-dom';
-import { formatDistanceToNow } from 'date-fns';
 import type { Ticket } from '@/shared/types/ticket.types';
 import SaveCloseControls from '@/features/connection-resilience/components/SaveCloseControls';
+
+function formatShortTime(dateString: string): string {
+  const diffMs = Date.now() - new Date(dateString).getTime();
+  const diffMins = Math.floor(diffMs / 60000);
+  if (diffMins < 1) return '<1m ago';
+  const diffHrs = Math.floor(diffMins / 60);
+  if (diffHrs < 1) return `${diffMins}m ago`;
+  const diffDays = Math.floor(diffHrs / 24);
+  if (diffDays < 1) return `${diffHrs}h ago`;
+  return `${diffDays}d ago`;
+}
 
 interface TicketEditPanelProps {
   ticket:       Ticket;
@@ -118,58 +128,58 @@ export default function TicketEditPanel({ ticket, onSave, onClose, unlockTicket 
       aria-label={`Editing ticket ${ticket.id}`}
       className={`edit-panel-aside ${isClosing ? 'closing' : ''}`}
     >
-      {/* Panel Header */}
+      {/* Panel Header & Metadata Box (Unified Layout) */}
       <div
         style={{
-          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-          padding: '14px 20px',
+          padding: '16px 20px',
           borderBottom: '1px solid #E5E7EB',
           background: '#F9FAFB',
         }}
       >
-        <div>
-          <span style={{ fontFamily: 'ui-monospace, monospace', fontSize: 11, color: '#6B7280', fontWeight: 500 }}>
+        {/* Top row: Ticket ID & Priority Badge perfectly aligned */}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6 }}>
+          <span style={{ fontFamily: 'ui-monospace, monospace', fontSize: 11, color: '#6B7280', fontWeight: 600 }}>
             #{ticket.id}
           </span>
-          <h2 style={{ fontWeight: 700, color: '#111827', fontSize: 14, lineHeight: 1.3, marginTop: 2, paddingRight: 16 }}>
-            {ticket.subject}
-          </h2>
+          <span
+            style={{
+              display: 'inline-flex', alignItems: 'center', gap: 4,
+              padding: '3px 8px', borderRadius: 999,
+              fontSize: 9, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em',
+              ...priStyle,
+            }}
+          >
+            <i className="ti ti-alert-triangle" style={{ fontSize: 9 }} aria-hidden="true" />
+            {ticket.priority}
+          </span>
         </div>
-        <span
+
+        {/* Subject Title */}
+        <h2 style={{ fontWeight: 700, color: '#111827', fontSize: 15, lineHeight: 1.35, marginBottom: 10 }}>
+          {ticket.subject}
+        </h2>
+
+        {/* Unified Metadata Row */}
+        <div
           style={{
-            display: 'inline-flex', alignItems: 'center', gap: 5,
-            padding: '3px 10px', borderRadius: 999,
-            fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em',
-            ...priStyle,
+            display: 'flex', flexWrap: 'wrap', alignItems: 'center',
+            gap: '6px 14px',
+            fontSize: 10, fontWeight: 500, color: '#6B7280',
           }}
         >
-          <i className="ti ti-alert-triangle" style={{ fontSize: 10 }} aria-hidden="true" />
-          {ticket.priority}
-        </span>
-      </div>
-
-      {/* Metadata row */}
-      <div
-        style={{
-          display: 'flex', flexWrap: 'wrap', alignItems: 'center',
-          gap: '6px 16px', padding: '10px 20px',
-          borderBottom: '1px solid #E5E7EB',
-          background: '#FFFFFF',
-          fontSize: 10, fontWeight: 500, color: '#6B7280',
-        }}
-      >
-        <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-          <i className="ti ti-map-pin" aria-hidden="true" />
-          {ticket.location}
-        </span>
-        <span style={{ display: 'flex', alignItems: 'center', gap: 4, fontFamily: 'ui-monospace, monospace', fontSize: 9 }}>
-          <i className="ti ti-clock" aria-hidden="true" />
-          {formatDistanceToNow(new Date(ticket.createdAt), { addSuffix: true })}
-        </span>
-        <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-          <i className="ti ti-user" aria-hidden="true" />
-          Assignee: {ticket.agentName}
-        </span>
+          <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+            <i className="ti ti-map-pin" style={{ opacity: 0.7 }} aria-hidden="true" />
+            {ticket.location}
+          </span>
+          <span style={{ display: 'flex', alignItems: 'center', gap: 4, fontFamily: 'ui-monospace, monospace' }}>
+            <i className="ti ti-clock" style={{ opacity: 0.7 }} aria-hidden="true" />
+            {formatShortTime(ticket.createdAt)}
+          </span>
+          <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+            <i className="ti ti-user" style={{ opacity: 0.7 }} aria-hidden="true" />
+            Assignee: {ticket.agentName}
+          </span>
+        </div>
       </div>
 
       {/* Description */}
