@@ -1,53 +1,45 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
 import { useConnectionStatus } from '../hooks/useConnectionStatus';
 
 export default function ConnectionBanner() {
   const status = useConnectionStatus();
-  const bannerRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const el = bannerRef.current;
-    if (!el) return;
-
-    if (status === 'disconnected' || status === 'reconnecting') {
-      el.style.transform = 'translateY(0)';
-      el.style.opacity = '1';
-    } else {
-      el.style.transform = 'translateY(-100%)';
-      el.style.opacity = '0';
-    }
-  }, [status]);
 
   if (status === 'connected') return null;
 
   const isReconnecting = status === 'reconnecting';
 
+  const bg = isReconnecting ? '#D97706' : '#DC2626';
+
   return (
     <div
-      ref={bannerRef}
       role="alert"
       aria-live="assertive"
-      className={`w-full flex items-center justify-center gap-2 px-4 py-2 font-bold text-white text-xs transition-transform duration-200 border-b ${
-        isReconnecting 
-          ? 'bg-amber-500 border-amber-600' 
-          : 'bg-red-600 border-red-700'
-      }`}
-      style={{ transform: 'translateY(-100%)', opacity: 0 }}
+      className="banner-slide show"
+      style={{
+        width: '100%',
+        padding: '10px 20px',
+        display: 'flex',
+        alignItems: 'center',
+        gap: 10,
+        fontSize: 13,
+        fontWeight: 600,
+        background: bg,
+        color: '#fff',
+        zIndex: 20,
+        position: 'relative',
+      }}
     >
-      {isReconnecting ? (
-        <>
-          <i className="ti ti-wifi text-sm animate-pulse" aria-hidden="true" />
-          SYSTEM PROTOCOL: Reconnecting to dispatch network... please wait
-        </>
-      ) : (
-        <>
-          <i className="ti ti-wifi-off text-sm animate-bounce" aria-hidden="true" />
-          CRITICAL ERROR: Connection to dispatch network lost. Reconnecting...
-        </>
-      )}
+      <i
+        className={`ti ${isReconnecting ? 'ti-wifi' : 'ti-wifi-off'}`}
+        style={{ fontSize: 16 }}
+        aria-hidden="true"
+      />
+      <span>
+        {isReconnecting
+          ? 'Reconnecting... please wait'
+          : 'Connection lost — Reconnecting...'}
+      </span>
     </div>
   );
 }
-

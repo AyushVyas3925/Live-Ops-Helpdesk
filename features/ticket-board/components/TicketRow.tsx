@@ -3,125 +3,268 @@
 import { formatDistanceToNow } from 'date-fns';
 import type { Ticket, LockState } from '@/shared/types/ticket.types';
 import { useAgent } from '@/shared/context/AgentContext';
-import LockBadge from '@/features/presence-lock/components/LockBadge';
 
-const PRIORITY_STYLES = {
-  critical: 'bg-[#FCEBEB] text-[#A32D2D] border border-red-200/60',
-  high: 'bg-[#FAEEDA] text-[#854F0B] border border-amber-200/60',
-  normal: 'bg-[#E6F1FB] text-[#0C447C] border border-blue-200/60',
-} as const;
+/* ── Priority pill styles (light theme) ── */
+const PRIORITY_PILL: Record<string, { background: string; color: string }> = {
+  critical: { background: '#FEE2E2', color: '#991B1B' },
+  high:     { background: '#FEF3C7', color: '#92400E' },
+  normal:   { background: '#EFF6FF', color: '#1D4ED8' },
+};
 
-const STATUS_STYLES = {
-  open: 'bg-[#EAF3DE] text-[#27500A] border border-green-200/60',
-  in_progress: 'bg-[#E6F1FB] text-[#0C447C] border border-blue-200/60',
-  closed: 'bg-[#F1EFE8] text-[#5F5E5A] border border-gray-200',
-} as const;
+/* ── Status pill styles (light theme) ── */
+const STATUS_PILL: Record<string, { background: string; color: string }> = {
+  open:        { background: '#DCFCE7', color: '#166534' },
+  in_progress: { background: '#EFF6FF', color: '#1D4ED8' },
+  closed:      { background: '#F3F4F6', color: '#6B7280' },
+};
 
-const STATUS_LABELS = {
-  open: 'Open',
-  in_progress: 'In Progress',
-  closed: 'Closed',
-} as const;
+const STATUS_LABEL: Record<string, string> = {
+  open: 'Open', in_progress: 'In Progress', closed: 'Closed',
+};
 
-interface TicketRowProps {
-  ticket: Ticket;
-  lock: LockState | null;
-  isNew: boolean;
-  onEdit: (ticket: Ticket) => void;
+/* ── Agent mini-avatar colors (same palette as reference HTML) ── */
+const AGENT_BG: Record<string, string> = {
+  'Marcus T.':  '#1e3a8a',
+  'Priya S.':   '#4c1d95',
+  'Jordan K.':  '#78350f',
+  'Aisha R.':   '#134e4a',
+  'Devon L.':   '#1e3a5f',
+  'Camille W.': '#3b1764',
+  'Ravi P.':    '#7c2d12',
+  'Nadia O.':   '#14532d',
+  'Tyler B.':   '#1e1b4b',
+  'Simone F.':  '#831843',
+};
+function agentBg(name: string) {
+  return AGENT_BG[name] ?? '#374151';
+}
+function getInitials(name: string) {
+  return name.split(' ').map(p => p[0]).join('').toUpperCase().slice(0, 2);
 }
 
-export default function TicketRow({ ticket, lock, isNew, onEdit }: TicketRowProps) {
+interface TicketRowProps {
+  ticket:   Ticket;
+  lock:     LockState | null;
+  isNew:    boolean;
+  onEdit:   (ticket: Ticket) => void;
+  onUnlock: (ticketId: string) => void;
+}
+
+export default function TicketRow({ ticket, lock, isNew, onEdit, onUnlock }: TicketRowProps) {
   const { agentId } = useAgent();
 
-  const isLockedByMe = lock?.agentId === agentId;
+  const isLockedByMe    = lock?.agentId === agentId;
   const isLockedByOther = !!lock && !isLockedByMe;
 
-  const rowClass = [
-    'grid grid-cols-[80px_1fr_90px_95px_130px_100px_85px] items-center gap-4 px-6 py-3 border-l-[4px] transition-colors duration-200',
-    isNew ? 'ticket-new bg-blue-50/40 border-l-blue-400' : '',
-    isLockedByOther ? 'bg-gray-100 border-l-red-500' : '',
-    isLockedByMe ? 'bg-blue-50/40 border-l-blue-500' : '',
-    !lock ? 'bg-white border-l-green-500 hover:bg-gray-50/50' : '',
-  ].filter(Boolean).join(' ');
+  /* ── Row class (3 states) ── */
+  let rowClass = isNew ? 'ticket-new ' : '';
+  if (isLockedByOther) rowClass += 'row-locked-other';
+  else if (isLockedByMe) rowClass += 'row-locked-me';
+  else rowClass += 'row-unlocked';
+
+  const handleRowClick = () => {
+    if (!isLockedByOther) onEdit(ticket);
+  };
+
+  const priStyle = PRIORITY_PILL[ticket.priority] ?? PRIORITY_PILL.normal;
+  const stStyle  = STATUS_PILL[ticket.status]     ?? STATUS_PILL.closed;
 
   return (
     <div
       className={rowClass}
+      onClick={handleRowClick}
       role="row"
       aria-label={`Ticket ${ticket.id}: ${ticket.subject}`}
+      style={{
+        display: 'grid',
+        gridTemplateColumns: '90px 1fr 100px 110px 130px 100px 90px',
+        gap: 0,
+        padding: '13px 16px',
+        borderBottom: '1px solid #F1F5F9',
+        alignItems: 'center',
+        cursor: isLockedByOther ? 'not-allowed' : 'pointer',
+        transition: 'background 0.2s, border-color 0.2s',
+        position: 'relative',
+      }}
     >
-      {/* Monospace Ticket ID */}
-      <span className="font-[family-name:var(--font-mono)] text-xs text-gray-600 tracking-tight font-medium">
+      {/* Ticket ID */}
+      <span
+        style={{
+          fontFamily: 'ui-monospace, monospace',
+          fontSize: 12,
+          color: '#6B7280',
+          fontWeight: 500,
+        }}
+      >
         #{ticket.id}
       </span>
 
-      {/* Subject and lock status */}
-      <div className="min-w-0 pr-2">
-        <p className={`text-xs font-semibold truncate ${isLockedByOther ? 'text-gray-500' : 'text-gray-900'}`}>
-          {ticket.subject}
-        </p>
-        <p className="text-[10px] text-gray-400 flex items-center gap-1 mt-0.5">
+      {/* Subject + lock badge */}
+      <div style={{ minWidth: 0, paddingRight: 8 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 7, minWidth: 0 }}>
+          <span
+            style={{
+              fontSize: 13,
+              fontWeight: 500,
+              color: isLockedByOther ? '#6B7280' : '#F3F4F6' === '#F3F4F6' ? '#111827' : '#111827',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              whiteSpace: 'nowrap',
+            }}
+          >
+            {ticket.subject}
+          </span>
+
+          {/* Lock badge */}
+          {isLockedByOther && (
+            <span
+              style={{
+                display: 'inline-flex', alignItems: 'center', gap: 4,
+                fontSize: 10, fontWeight: 600,
+                color: '#991B1B', background: '#FEE2E2',
+                padding: '2px 7px', borderRadius: 999,
+                whiteSpace: 'nowrap', flexShrink: 0,
+              }}
+              aria-label={`Locked by ${lock!.agentName}`}
+            >
+              <i className="ti ti-lock" style={{ fontSize: 10 }} aria-hidden="true" />
+              Locked by {lock!.agentName}
+            </span>
+          )}
+          {isLockedByMe && (
+            <span
+              style={{
+                display: 'inline-flex', alignItems: 'center', gap: 4,
+                fontSize: 10, fontWeight: 600,
+                color: '#1D4ED8', background: '#EFF6FF',
+                padding: '2px 7px', borderRadius: 999,
+                whiteSpace: 'nowrap', flexShrink: 0,
+              }}
+            >
+              <i className="ti ti-lock" style={{ fontSize: 10 }} aria-hidden="true" />
+              You
+            </span>
+          )}
+        </div>
+        <p style={{ fontSize: 11, color: '#9CA3AF', display: 'flex', alignItems: 'center', gap: 3, marginTop: 2 }}>
           <i className="ti ti-map-pin" />
           {ticket.location}
         </p>
-        {lock && (
-          <div className="mt-1">
-            <LockBadge agentName={lock.agentName} isOwnLock={isLockedByMe} />
-          </div>
-        )}
       </div>
 
-      {/* Priority Badge */}
+      {/* Priority pill */}
       <div>
-        <span className={`inline-flex items-center justify-center px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wide ${PRIORITY_STYLES[ticket.priority]}`}>
-          {ticket.priority}
+        <span
+          style={{
+            display: 'inline-flex', alignItems: 'center', gap: 4,
+            padding: '3px 9px', borderRadius: 999,
+            fontSize: 11, fontWeight: 700, letterSpacing: '0.03em',
+            whiteSpace: 'nowrap',
+            ...priStyle,
+          }}
+        >
+          {ticket.priority === 'critical' && <i className="ti ti-alert-triangle" style={{ fontSize: 11 }} aria-hidden="true" />}
+          {ticket.priority === 'high'     && <i className="ti ti-arrow-up"       style={{ fontSize: 11 }} aria-hidden="true" />}
+          {ticket.priority.toUpperCase()}
         </span>
       </div>
 
-      {/* Status Badge */}
+      {/* Status pill */}
       <div>
-        <span className={`inline-flex items-center justify-center px-2 py-0.5 rounded text-[10px] font-semibold ${STATUS_STYLES[ticket.status]}`}>
-          {STATUS_LABELS[ticket.status]}
+        <span
+          style={{
+            display: 'inline-flex', alignItems: 'center', gap: 4,
+            padding: '3px 9px', borderRadius: 999,
+            fontSize: 11, fontWeight: 700,
+            whiteSpace: 'nowrap',
+            ...stStyle,
+          }}
+        >
+          {ticket.status === 'open'        && <i className="ti ti-circle"  style={{ fontSize: 10 }} aria-hidden="true" />}
+          {ticket.status === 'in_progress' && <i className="ti ti-loader"  style={{ fontSize: 10 }} aria-hidden="true" />}
+          {STATUS_LABEL[ticket.status]}
         </span>
       </div>
 
-      {/* Assigned Agent Details */}
-      <div className="flex items-center gap-2 min-w-0">
-        <div className="w-6 h-6 rounded-full bg-gray-50 border border-gray-300 flex items-center justify-center text-[10px] font-bold text-gray-900 flex-shrink-0 uppercase">
-          {ticket.agentName.split(' ').map(p => p[0]).join('')}
-        </div>
-        <span className={`text-xs font-medium truncate ${isLockedByOther ? 'text-gray-500' : 'text-gray-700'}`}>
+      {/* Agent cell */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 7, fontSize: 12, color: isLockedByOther ? '#9CA3AF' : '#374151' }}>
+        <span
+          style={{
+            width: 26, height: 26, borderRadius: '50%',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            fontSize: 10, fontWeight: 700, flexShrink: 0,
+            background: agentBg(ticket.agentName), color: '#fff',
+          }}
+        >
+          {getInitials(ticket.agentName)}
+        </span>
+        <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
           {ticket.agentName}
         </span>
       </div>
 
-      {/* Actions & Relative Time */}
-      <div className="flex items-center justify-between gap-2 pl-1">
-        <span className="font-[family-name:var(--font-mono)] text-[10px] text-gray-400 whitespace-nowrap">
-          {formatDistanceToNow(new Date(ticket.createdAt), { addSuffix: true })}
-        </span>
-        
-        <button
-          id={`edit-btn-${ticket.id}`}
-          onClick={() => !isLockedByOther && onEdit(ticket)}
-          disabled={isLockedByOther}
-          aria-disabled={isLockedByOther}
-          aria-label={isLockedByOther ? `Ticket ${ticket.id} is locked by ${lock?.agentName}` : `Edit ticket ${ticket.id}`}
-          className={`flex items-center gap-1 px-2.5 py-1 rounded text-[10px] font-semibold transition-all duration-150 ${
-            isLockedByOther
-              ? 'opacity-45 cursor-not-allowed bg-gray-50 border border-gray-200 text-gray-500'
-              : 'bg-blue-600 text-white hover:bg-blue-700 active:bg-blue-800 shadow-sm cursor-pointer'
-          }`}
-        >
-          {isLockedByOther ? (
-            <i className="ti ti-lock text-[10px]" aria-hidden="true" />
-          ) : (
-            <i className="ti ti-edit text-[10px]" aria-hidden="true" />
-          )}
-          {isLockedByOther ? 'Locked' : 'Edit'}
-        </button>
-      </div>
+      {/* Created time */}
+      <span style={{ fontFamily: 'ui-monospace, monospace', fontSize: 11, color: '#9CA3AF', whiteSpace: 'nowrap' }}>
+        {formatDistanceToNow(new Date(ticket.createdAt), { addSuffix: true })}
+      </span>
+
+      {/* Action button — 3 states */}
+      <span onClick={e => e.stopPropagation()}>
+        {isLockedByOther ? (
+          /* Locked by someone else */
+          <button
+            id={`edit-btn-${ticket.id}`}
+            disabled
+            aria-disabled="true"
+            aria-label={`Ticket ${ticket.id} is locked by ${lock?.agentName}`}
+            style={{
+              padding: '5px 13px', borderRadius: 6, fontSize: 12, fontWeight: 600,
+              border: 'none', cursor: 'not-allowed', opacity: 0.5,
+              display: 'flex', alignItems: 'center', gap: 5,
+              background: '#F3F4F6', color: '#9CA3AF',
+            }}
+          >
+            <i className="ti ti-lock" style={{ fontSize: 12 }} aria-hidden="true" />
+            Locked
+          </button>
+        ) : isLockedByMe ? (
+          /* Locked by me — show Release */
+          <button
+            id={`edit-btn-${ticket.id}`}
+            onClick={() => onUnlock(ticket.id)}
+            aria-label={`Release lock on ticket ${ticket.id}`}
+            style={{
+              padding: '5px 13px', borderRadius: 6, fontSize: 12, fontWeight: 600,
+              cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 5,
+              background: '#DBEAFE', color: '#1D4ED8', border: '1px solid #93C5FD',
+              transition: 'background 0.15s',
+            }}
+            onMouseEnter={e => (e.currentTarget.style.background = '#BFDBFE')}
+            onMouseLeave={e => (e.currentTarget.style.background = '#DBEAFE')}
+          >
+            <i className="ti ti-lock-open" style={{ fontSize: 12 }} aria-hidden="true" />
+            Release
+          </button>
+        ) : (
+          /* Unlocked — show Edit */
+          <button
+            id={`edit-btn-${ticket.id}`}
+            onClick={() => onEdit(ticket)}
+            aria-label={`Edit ticket ${ticket.id}`}
+            style={{
+              padding: '5px 13px', borderRadius: 6, fontSize: 12, fontWeight: 600,
+              border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 5,
+              background: '#2563EB', color: '#fff',
+              transition: 'background 0.15s',
+            }}
+            onMouseEnter={e => (e.currentTarget.style.background = '#1D4ED8')}
+            onMouseLeave={e => (e.currentTarget.style.background = '#2563EB')}
+          >
+            <i className="ti ti-edit" style={{ fontSize: 12 }} aria-hidden="true" />
+            Edit
+          </button>
+        )}
+      </span>
     </div>
   );
 }
-

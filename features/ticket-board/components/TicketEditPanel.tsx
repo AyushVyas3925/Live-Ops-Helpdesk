@@ -6,91 +6,137 @@ import type { Ticket } from '@/shared/types/ticket.types';
 import SaveCloseControls from '@/features/connection-resilience/components/SaveCloseControls';
 
 interface TicketEditPanelProps {
-  ticket: Ticket;
-  onSave: () => void;
-  onClose: () => void;
+  ticket:       Ticket;
+  onSave:       () => void;
+  onClose:      () => void;
   unlockTicket: (ticketId: string) => void;
 }
 
-const PRIORITY_COLORS = {
-  critical: 'bg-[#FCEBEB] text-[#A32D2D] border border-red-200/60',
-  high: 'bg-[#FAEEDA] text-[#854F0B] border border-amber-200/60',
-  normal: 'bg-[#E6F1FB] text-[#0C447C] border border-blue-200/60',
-} as const;
+const PRIORITY_PILL: Record<string, { background: string; color: string; border: string }> = {
+  critical: { background: '#FEE2E2', color: '#991B1B', border: '1px solid #FECACA' },
+  high:     { background: '#FEF3C7', color: '#92400E', border: '1px solid #FDE68A' },
+  normal:   { background: '#EFF6FF', color: '#1D4ED8', border: '1px solid #BFDBFE' },
+};
 
 export default function TicketEditPanel({ ticket, onSave, onClose, unlockTicket }: TicketEditPanelProps) {
-  const [notes, setNotes] = useState('');
+  const [notes,      setNotes]      = useState('');
   const [resolution, setResolution] = useState('');
-  const [isSaving, setIsSaving] = useState(false);
+  const [isSaving,   setIsSaving]   = useState(false);
 
   const handleSave = async () => {
     setIsSaving(true);
-    // Simulate save round-trip
     await new Promise(res => setTimeout(res, 600));
     setIsSaving(false);
     onSave();
   };
 
+  const priStyle = PRIORITY_PILL[ticket.priority] ?? PRIORITY_PILL.normal;
+
   return (
     <>
       {/* Backdrop */}
       <div
-        className="fixed inset-0 bg-black/40 z-30 transition-opacity"
         onClick={() => { unlockTicket(ticket.id); onClose(); }}
         aria-hidden="true"
+        style={{
+          position: 'fixed', inset: 0,
+          background: 'rgba(0,0,0,0.4)',
+          zIndex: 30,
+          transition: 'opacity 0.2s',
+        }}
       />
 
-      {/* Side Panel (Industrial Card Theme) */}
+      {/* Side Panel */}
       <aside
-        className="fixed right-0 top-0 h-full w-[480px] bg-white border-l border-gray-200 shadow-2xl z-45 flex flex-col transition-all duration-200"
         role="complementary"
         aria-label={`Editing ticket ${ticket.id}`}
+        style={{
+          position: 'fixed', right: 0, top: 0,
+          height: '100%', width: 480,
+          background: '#FFFFFF',
+          borderLeft: '1px solid #E5E7EB',
+          boxShadow: '0 20px 60px rgba(0,0,0,0.15)',
+          zIndex: 40,
+          display: 'flex', flexDirection: 'column',
+        }}
       >
         {/* Panel Header */}
-        <div className="flex items-center justify-between px-5 py-4 border-b border-gray-200 bg-gray-50">
+        <div
+          style={{
+            display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+            padding: '14px 20px',
+            borderBottom: '1px solid #E5E7EB',
+            background: '#F9FAFB',
+          }}
+        >
           <div>
-            <span className="font-[family-name:var(--font-mono)] text-[11px] text-gray-600 font-medium">
+            <span style={{ fontFamily: 'ui-monospace, monospace', fontSize: 11, color: '#6B7280', fontWeight: 500 }}>
               #{ticket.id}
             </span>
-            <h2 className="font-bold text-gray-900 text-sm leading-tight mt-0.5 pr-4">
+            <h2 style={{ fontWeight: 700, color: '#111827', fontSize: 14, lineHeight: 1.3, marginTop: 2, paddingRight: 16 }}>
               {ticket.subject}
             </h2>
           </div>
-          
-          <span className={`flex items-center gap-1.5 px-2.5 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider ${PRIORITY_COLORS[ticket.priority]}`}>
-            <i className="ti ti-alert-triangle text-[10px]" aria-hidden="true" />
+          <span
+            style={{
+              display: 'inline-flex', alignItems: 'center', gap: 5,
+              padding: '3px 10px', borderRadius: 999,
+              fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em',
+              ...priStyle,
+            }}
+          >
+            <i className="ti ti-alert-triangle" style={{ fontSize: 10 }} aria-hidden="true" />
             {ticket.priority}
           </span>
         </div>
 
-        {/* Operational Metadata */}
-        <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5 px-5 py-3 border-b border-gray-200 text-[10px] font-medium text-gray-600 bg-white">
-          <span className="flex items-center gap-1">
+        {/* Metadata row */}
+        <div
+          style={{
+            display: 'flex', flexWrap: 'wrap', alignItems: 'center',
+            gap: '6px 16px', padding: '10px 20px',
+            borderBottom: '1px solid #E5E7EB',
+            background: '#FFFFFF',
+            fontSize: 10, fontWeight: 500, color: '#6B7280',
+          }}
+        >
+          <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
             <i className="ti ti-map-pin" aria-hidden="true" />
             {ticket.location}
           </span>
-          <span className="flex items-center gap-1 font-[family-name:var(--font-mono)] text-[9px]">
+          <span style={{ display: 'flex', alignItems: 'center', gap: 4, fontFamily: 'ui-monospace, monospace', fontSize: 9 }}>
             <i className="ti ti-clock" aria-hidden="true" />
             {formatDistanceToNow(new Date(ticket.createdAt), { addSuffix: true })}
           </span>
-          <span className="flex items-center gap-1">
+          <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
             <i className="ti ti-user" aria-hidden="true" />
             Assignee: {ticket.agentName}
           </span>
         </div>
 
-        {/* Cargo / Ticket Details */}
-        <div className="px-5 py-4 border-b border-gray-200 bg-white">
-          <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">Cargo details / Issue Description</p>
-          <p className="text-xs text-gray-600 leading-relaxed font-medium bg-gray-50 p-3 rounded border border-gray-200">
+        {/* Description */}
+        <div style={{ padding: '14px 20px', borderBottom: '1px solid #E5E7EB', background: '#FFFFFF' }}>
+          <p style={{ fontSize: 10, fontWeight: 700, color: '#9CA3AF', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 6 }}>
+            Cargo details / Issue Description
+          </p>
+          <p
+            style={{
+              fontSize: 12, color: '#4B5563', lineHeight: 1.6,
+              background: '#F9FAFB', padding: '10px 12px',
+              borderRadius: 6, border: '1px solid #E5E7EB',
+            }}
+          >
             {ticket.description}
           </p>
         </div>
 
-        {/* Agent Operational Logs Form */}
-        <div className="flex-1 overflow-y-auto px-5 py-4 flex flex-col gap-4 bg-white">
+        {/* Form */}
+        <div style={{ flex: 1, overflowY: 'auto', padding: '16px 20px', display: 'flex', flexDirection: 'column', gap: 16, background: '#FFFFFF' }}>
           <div>
-            <label htmlFor={`notes-${ticket.id}`} className="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">
+            <label
+              htmlFor={`notes-${ticket.id}`}
+              style={{ display: 'block', fontSize: 10, fontWeight: 700, color: '#9CA3AF', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 6 }}
+            >
               Agent Operational Notes
             </label>
             <textarea
@@ -99,12 +145,26 @@ export default function TicketEditPanel({ ticket, onSave, onClose, unlockTicket 
               onChange={e => setNotes(e.target.value)}
               rows={4}
               placeholder="Add internal cargo dispatch logs and notes..."
-              className="w-full text-xs font-semibold border border-gray-300 rounded bg-white text-gray-900 px-3 py-2 resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+              style={{
+                width: '100%', resize: 'none',
+                fontSize: 12, fontWeight: 500,
+                border: '1px solid #D1D5DB', borderRadius: 6,
+                background: '#FFFFFF', color: '#111827',
+                padding: '8px 12px',
+                outline: 'none',
+                transition: 'border-color 0.15s',
+                boxSizing: 'border-box',
+              }}
+              onFocus={e  => (e.currentTarget.style.borderColor = '#3B82F6')}
+              onBlur={e   => (e.currentTarget.style.borderColor = '#D1D5DB')}
             />
           </div>
-          
+
           <div>
-            <label htmlFor={`resolution-${ticket.id}`} className="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">
+            <label
+              htmlFor={`resolution-${ticket.id}`}
+              style={{ display: 'block', fontSize: 10, fontWeight: 700, color: '#9CA3AF', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 6 }}
+            >
               Resolution Protocol
             </label>
             <textarea
@@ -113,13 +173,33 @@ export default function TicketEditPanel({ ticket, onSave, onClose, unlockTicket 
               onChange={e => setResolution(e.target.value)}
               rows={5}
               placeholder="Detail the actions taken to resolve the dispatch issue..."
-              className="w-full text-xs font-semibold border border-gray-300 rounded bg-white text-gray-900 px-3 py-2 resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+              style={{
+                width: '100%', resize: 'none',
+                fontSize: 12, fontWeight: 500,
+                border: '1px solid #D1D5DB', borderRadius: 6,
+                background: '#FFFFFF', color: '#111827',
+                padding: '8px 12px',
+                outline: 'none',
+                transition: 'border-color 0.15s',
+                boxSizing: 'border-box',
+              }}
+              onFocus={e  => (e.currentTarget.style.borderColor = '#3B82F6')}
+              onBlur={e   => (e.currentTarget.style.borderColor = '#D1D5DB')}
             />
           </div>
         </div>
 
-        {/* Footer controls */}
-        <div className="px-5 py-4 border-t border-gray-200 bg-gray-50 flex justify-end shadow-[0_-2px_10px_rgba(0,0,0,0.03)]">
+        {/* Footer */}
+        <div
+          style={{
+            padding: '14px 20px',
+            borderTop: '1px solid #E5E7EB',
+            background: '#F9FAFB',
+            display: 'flex',
+            justifyContent: 'flex-end',
+            boxShadow: '0 -2px 10px rgba(0,0,0,0.04)',
+          }}
+        >
           <SaveCloseControls
             ticketId={ticket.id}
             onSave={handleSave}
@@ -131,4 +211,3 @@ export default function TicketEditPanel({ ticket, onSave, onClose, unlockTicket 
     </>
   );
 }
-

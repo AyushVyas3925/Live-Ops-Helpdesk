@@ -3,9 +3,10 @@ import TicketBoard from '@/features/ticket-board/components/TicketBoard';
 
 export default function HelpDeskPage() {
   return (
-    <div className="flex flex-col h-screen overflow-hidden">
+    <div style={{ display: 'flex', flexDirection: 'column', height: '100vh', overflow: 'hidden', background: '#F8FAFC' }}>
+      {/* Connection status banner — only renders when disconnected/reconnecting */}
       <ConnectionBanner />
-      <main className="flex-1 overflow-hidden">
+      <main style={{ flex: 1, overflow: 'hidden' }}>
         <TicketBoard />
       </main>
     </div>

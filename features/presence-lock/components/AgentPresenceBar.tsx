@@ -6,59 +6,101 @@ interface AgentPresenceBarProps {
   agents: Agent[];
 }
 
-function agentColor(agentId: string): string {
-  const palette = [
-    'bg-blue-600', 'bg-emerald-600', 'bg-violet-600',
-    'bg-amber-600', 'bg-rose-600', 'bg-cyan-600',
-    'bg-indigo-600', 'bg-orange-600',
-  ];
+/* ── Deterministic color from agentId ── */
+const PALETTE_BG = [
+  '#1e3a8a', '#4c1d95', '#78350f', '#134e4a',
+  '#1e3a5f', '#3b1764', '#7c2d12', '#14532d',
+];
+
+function agentBg(agentId: string): string {
   let hash = 0;
   for (let i = 0; i < agentId.length; i++) hash = agentId.charCodeAt(i) + ((hash << 5) - hash);
-  return palette[Math.abs(hash) % palette.length];
+  return PALETTE_BG[Math.abs(hash) % PALETTE_BG.length];
 }
 
 function getInitials(name: string) {
-  return name.split(' ').map(p => p[0]).join('').toUpperCase();
+  return name.split(' ').map(p => p[0]).join('').toUpperCase().slice(0, 2);
 }
 
 export default function AgentPresenceBar({ agents }: AgentPresenceBarProps) {
-  const visible = agents.slice(0, 8);
+  const visible  = agents.slice(0, 8);
   const overflow = agents.length - 8;
 
   if (agents.length === 0) return null;
 
   return (
-    <div className="flex items-center gap-1" aria-label="Active agents">
-      {visible.map(agent => (
-        <div key={agent.agentId} className="relative group">
+    <div
+      className="av-stack"
+      aria-label={`${agents.length} agents online`}
+    >
+      {visible.map((agent, i) => (
+        <div
+          key={agent.agentId}
+          style={{ position: 'relative', marginLeft: i > 0 ? -6 : 0, zIndex: 10 - i }}
+          title={agent.editingTicketId ? `${agent.agentName} — editing #${agent.editingTicketId}` : agent.agentName}
+        >
+          {/* Avatar circle */}
           <div
-            className={`w-6 h-6 rounded-full flex items-center justify-center text-white text-[10px] font-bold ${agentColor(agent.agentId)}`}
-            title={agent.editingTicketId ? `${agent.agentName} — editing #${agent.editingTicketId}` : agent.agentName}
+            style={{
+              width: 32,
+              height: 32,
+              borderRadius: '50%',
+              background: agentBg(agent.agentId),
+              color: '#fff',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: 11,
+              fontWeight: 700,
+              border: '2px solid #FFFFFF',
+              cursor: 'default',
+              transition: 'transform 0.15s',
+              userSelect: 'none',
+            }}
+            onMouseEnter={e => (e.currentTarget.style.transform = 'scale(1.1)')}
+            onMouseLeave={e => (e.currentTarget.style.transform = '')}
+            aria-label={agent.agentName}
           >
             {getInitials(agent.agentName)}
           </div>
+
+          {/* Online status dot */}
           <span
-            className={`absolute -bottom-0.5 -right-0.5 w-2 h-2 rounded-full border border-white ${
-              agent.editingTicketId ? 'bg-amber-500' : 'bg-green-500'
-            }`}
             aria-hidden="true"
+            style={{
+              position: 'absolute',
+              bottom: 0,
+              right: 0,
+              width: 9,
+              height: 9,
+              borderRadius: '50%',
+              background: agent.editingTicketId ? '#F59E0B' : '#22C55E',
+              border: '2px solid #FFFFFF',
+            }}
           />
-          <div className="absolute bottom-full mb-1.5 left-1/2 -translate-x-1/2 hidden group-hover:block z-10">
-            <div className="bg-gray-900 text-white text-[9px] rounded px-2 py-1 whitespace-nowrap shadow-md border border-gray-700">
-              {agent.agentName}
-              {agent.editingTicketId && (
-                <span className="text-amber-300 font-mono ml-1">· #{agent.editingTicketId}</span>
-              )}
-            </div>
-          </div>
         </div>
       ))}
+
       {overflow > 0 && (
-        <div className="w-6 h-6 rounded-full bg-gray-100 border border-gray-300 flex items-center justify-center text-[9px] font-bold text-gray-600">
+        <div
+          style={{
+            width: 32,
+            height: 32,
+            borderRadius: '50%',
+            background: '#F3F4F6',
+            border: '2px solid #FFFFFF',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            fontSize: 11,
+            fontWeight: 700,
+            color: '#6B7280',
+            marginLeft: -6,
+          }}
+        >
           +{overflow}
         </div>
       )}
     </div>
   );
 }
-
