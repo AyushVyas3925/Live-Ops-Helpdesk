@@ -68,9 +68,12 @@ export default function TicketBoard() {
 
   /* ── Edit / lock handlers ── */
   const handleEdit = useCallback((ticket: Ticket) => {
+    if (editingTicket && editingTicket.id !== ticket.id) {
+      unlockTicket(editingTicket.id);
+    }
     setEditingTicket(ticket);
     lockTicket(ticket.id);
-  }, [lockTicket]);
+  }, [editingTicket, lockTicket, unlockTicket]);
 
   const handleSave  = useCallback(() => setEditingTicket(null), []);
   const handleClose = useCallback(() => setEditingTicket(null), []);
