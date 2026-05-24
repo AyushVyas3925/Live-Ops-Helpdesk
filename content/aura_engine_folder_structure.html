@@ -1,0 +1,148 @@
+
+<style>
+:root { --gap: 6px; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: var(--font-mono, monospace); font-size: 13px; }
+
+.page { padding: 16px 0; }
+
+.category-block { margin-bottom: 20px; border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); overflow: hidden; }
+
+.cat-header { display: flex; align-items: center; gap: 10px; padding: 10px 16px; border-bottom: 0.5px solid var(--color-border-tertiary); }
+.cat-badge { font-size: 11px; font-weight: 500; padding: 2px 8px; border-radius: 20px; white-space: nowrap; }
+.badge-grid { background: #E6F1FB; color: #0C447C; }
+.badge-dash { background: #EAF3DE; color: #3B6D11; }
+.badge-export { background: #FAEEDA; color: #854F0B; }
+.badge-shared { background: #F1EFE8; color: #5F5E5A; }
+@media (prefers-color-scheme: dark) {
+  .badge-grid { background: #0C447C; color: #B5D4F4; }
+  .badge-dash { background: #27500A; color: #C0DD97; }
+  .badge-export { background: #633806; color: #FAC775; }
+  .badge-shared { background: #444441; color: #D3D1C7; }
+}
+
+.cat-title { font-size: 13px; font-weight: 500; color: var(--color-text-primary); }
+.cat-req { font-size: 11px; color: var(--color-text-tertiary); margin-left: auto; }
+
+.tree { padding: 10px 16px; display: flex; flex-direction: column; gap: 2px; }
+
+.node { display: flex; align-items: flex-start; gap: 0; color: var(--color-text-secondary); line-height: 1.7; white-space: nowrap; }
+.prefix { color: var(--color-border-primary); user-select: none; }
+.folder-icon { color: #378ADD; margin-right: 5px; }
+.file-icon { color: var(--color-text-tertiary); margin-right: 5px; }
+.folder-name { color: var(--color-text-primary); font-weight: 500; }
+.file-name { color: var(--color-text-secondary); }
+.tag { font-size: 10px; padding: 1px 6px; border-radius: 10px; margin-left: 8px; font-weight: 500; vertical-align: middle; }
+.tag-hook { background: #F4C0D1; color: #72243E; }
+.tag-comp { background: #B5D4F4; color: #0C447C; }
+.tag-util { background: #C0DD97; color: #27500A; }
+.tag-api { background: #FAC775; color: #633806; }
+@media (prefers-color-scheme: dark) {
+  .tag-hook { background: #72243E; color: #F4C0D1; }
+  .tag-comp { background: #0C447C; color: #B5D4F4; }
+  .tag-util { background: #27500A; color: #C0DD97; }
+  .tag-api { background: #633806; color: #FAC775; }
+}
+
+.feature-pill { display: inline-block; font-size: 10px; padding: 1px 6px; border-radius: 10px; margin-left: 6px; color: var(--color-text-tertiary); background: var(--color-background-secondary); }
+
+.root-line { display: flex; align-items: center; gap: 8px; padding: 8px 16px; border-bottom: 0.5px solid var(--color-border-tertiary); background: var(--color-background-secondary); }
+.root-name { font-weight: 500; color: var(--color-text-primary); font-size: 14px; }
+.root-sub { font-size: 11px; color: var(--color-text-tertiary); }
+</style>
+
+<div class="page">
+
+<div class="category-block">
+  <div class="root-line">
+    <i class="ti ti-folder" style="font-size:16px;color:#378ADD" aria-hidden="true"></i>
+    <span class="root-name">aura-engine / src / features /</span>
+    <span class="root-sub">3 categories · 3 requirements</span>
+  </div>
+</div>
+
+<!-- Category 1: Data Grid -->
+<div class="category-block">
+  <div class="cat-header">
+    <i class="ti ti-table" aria-hidden="true" style="color:#378ADD;font-size:16px"></i>
+    <span class="cat-title">data-grid</span>
+    <span class="cat-badge badge-grid">Category 1</span>
+    <span class="cat-req">Requirement 1 — Enterprise Data Grid</span>
+  </div>
+  <div class="tree">
+    <div class="node"><span class="prefix">├─ </span><i class="ti ti-folder folder-icon" aria-hidden="true"></i><span class="folder-name">components/</span></div>
+    <div class="node"><span class="prefix">│  ├─ </span><i class="ti ti-file file-icon" aria-hidden="true"></i><span class="file-name">DataGrid.jsx</span><span class="tag tag-comp">component</span><span class="feature-pill">sticky header · sortable cols</span></div>
+    <div class="node"><span class="prefix">│  ├─ </span><i class="ti ti-file file-icon" aria-hidden="true"></i><span class="file-name">GridHeader.jsx</span><span class="tag tag-comp">component</span><span class="feature-pill">sticky + sort icons</span></div>
+    <div class="node"><span class="prefix">│  ├─ </span><i class="ti ti-file file-icon" aria-hidden="true"></i><span class="file-name">Pagination.jsx</span><span class="tag tag-comp">component</span><span class="feature-pill">50 items/page</span></div>
+    <div class="node"><span class="prefix">│  ├─ </span><i class="ti ti-file file-icon" aria-hidden="true"></i><span class="file-name">OmniSearch.jsx</span><span class="tag tag-comp">component</span><span class="feature-pill">global search bar UI</span></div>
+    <div class="node"><span class="prefix">│  └─ </span><i class="ti ti-folder folder-icon" aria-hidden="true"></i><span class="folder-name">filters/</span></div>
+    <div class="node"><span class="prefix">│     ├─ </span><i class="ti ti-file file-icon" aria-hidden="true"></i><span class="file-name">CategoryFilter.jsx</span><span class="feature-pill">dropdown filter</span></div>
+    <div class="node"><span class="prefix">│     ├─ </span><i class="ti ti-file file-icon" aria-hidden="true"></i><span class="file-name">StockSlider.jsx</span><span class="feature-pill">stock level &lt; 20</span></div>
+    <div class="node"><span class="prefix">│     └─ </span><i class="ti ti-file file-icon" aria-hidden="true"></i><span class="file-name">PriceRangeFilter.jsx</span><span class="feature-pill">min–max range</span></div>
+    <div class="node"><span class="prefix">├─ </span><i class="ti ti-folder folder-icon" aria-hidden="true"></i><span class="folder-name">hooks/</span></div>
+    <div class="node"><span class="prefix">│  ├─ </span><i class="ti ti-file file-icon" aria-hidden="true"></i><span class="file-name">useDebounceSearch.js</span><span class="tag tag-hook">hook</span><span class="feature-pill">500ms debounce</span></div>
+    <div class="node"><span class="prefix">│  ├─ </span><i class="ti ti-file file-icon" aria-hidden="true"></i><span class="file-name">usePagination.js</span><span class="tag tag-hook">hook</span><span class="feature-pill">server-side page state</span></div>
+    <div class="node"><span class="prefix">│  └─ </span><i class="ti ti-file file-icon" aria-hidden="true"></i><span class="file-name">useColumnSort.js</span><span class="tag tag-hook">hook</span><span class="feature-pill">asc / desc toggle</span></div>
+    <div class="node"><span class="prefix">├─ </span><i class="ti ti-folder folder-icon" aria-hidden="true"></i><span class="folder-name">api/</span></div>
+    <div class="node"><span class="prefix">│  └─ </span><i class="ti ti-file file-icon" aria-hidden="true"></i><span class="file-name">inventoryApi.js</span><span class="tag tag-api">api</span><span class="feature-pill">fetch with filters + page params</span></div>
+    <div class="node"><span class="prefix">└─ </span><i class="ti ti-file file-icon" aria-hidden="true"></i><span class="file-name">index.js</span><span class="feature-pill">barrel export</span></div>
+  </div>
+</div>
+
+<!-- Category 2: Dashboard -->
+<div class="category-block">
+  <div class="cat-header">
+    <i class="ti ti-layout-dashboard" aria-hidden="true" style="color:#639922;font-size:16px"></i>
+    <span class="cat-title">dashboard</span>
+    <span class="cat-badge badge-dash">Category 2</span>
+    <span class="cat-req">Requirement 2 — Command Center</span>
+  </div>
+  <div class="tree">
+    <div class="node"><span class="prefix">├─ </span><i class="ti ti-folder folder-icon" aria-hidden="true"></i><span class="folder-name">components/</span></div>
+    <div class="node"><span class="prefix">│  ├─ </span><i class="ti ti-file file-icon" aria-hidden="true"></i><span class="file-name">CommandCenter.jsx</span><span class="tag tag-comp">component</span><span class="feature-pill">main layout wrapper</span></div>
+    <div class="node"><span class="prefix">│  ├─ </span><i class="ti ti-folder folder-icon" aria-hidden="true"></i><span class="folder-name">charts/</span></div>
+    <div class="node"><span class="prefix">│  │  ├─ </span><i class="ti ti-file file-icon" aria-hidden="true"></i><span class="file-name">RestockBarChart.jsx</span><span class="feature-pill">top 10 low stock — Widget 1</span></div>
+    <div class="node"><span class="prefix">│  │  └─ </span><i class="ti ti-file file-icon" aria-hidden="true"></i><span class="file-name">PortfolioPieChart.jsx</span><span class="feature-pill">valuation by category — Widget 2</span></div>
+    <div class="node"><span class="prefix">│  └─ </span><i class="ti ti-folder folder-icon" aria-hidden="true"></i><span class="folder-name">kpi-cards/</span></div>
+    <div class="node"><span class="prefix">│     ├─ </span><i class="ti ti-file file-icon" aria-hidden="true"></i><span class="file-name">TotalSKUsCard.jsx</span><span class="feature-pill">Widget 3 · 50,000 SKUs</span></div>
+    <div class="node"><span class="prefix">│     ├─ </span><i class="ti ti-file file-icon" aria-hidden="true"></i><span class="file-name">InventoryValueCard.jsx</span><span class="feature-pill">Widget 3 · total $ value</span></div>
+    <div class="node"><span class="prefix">│     └─ </span><i class="ti ti-file file-icon" aria-hidden="true"></i><span class="file-name">OutOfStockCard.jsx</span><span class="feature-pill">Widget 3 · zero-stock count</span></div>
+    <div class="node"><span class="prefix">├─ </span><i class="ti ti-folder folder-icon" aria-hidden="true"></i><span class="folder-name">hooks/</span></div>
+    <div class="node"><span class="prefix">│  └─ </span><i class="ti ti-file file-icon" aria-hidden="true"></i><span class="file-name">useDashboardData.js</span><span class="tag tag-hook">hook</span><span class="feature-pill">analytics API calls</span></div>
+    <div class="node"><span class="prefix">└─ </span><i class="ti ti-file file-icon" aria-hidden="true"></i><span class="file-name">index.js</span><span class="feature-pill">barrel export</span></div>
+  </div>
+</div>
+
+<!-- Category 3: Export -->
+<div class="category-block">
+  <div class="cat-header">
+    <i class="ti ti-file-download" aria-hidden="true" style="color:#BA7517;font-size:16px"></i>
+    <span class="cat-title">export</span>
+    <span class="cat-badge badge-export">Category 3</span>
+    <span class="cat-req">Requirement 3 — Export Module</span>
+  </div>
+  <div class="tree">
+    <div class="node"><span class="prefix">├─ </span><i class="ti ti-folder folder-icon" aria-hidden="true"></i><span class="folder-name">components/</span></div>
+    <div class="node"><span class="prefix">│  └─ </span><i class="ti ti-file file-icon" aria-hidden="true"></i><span class="file-name">ExportButton.jsx</span><span class="tag tag-comp">component</span><span class="feature-pill">trigger download UI</span></div>
+    <div class="node"><span class="prefix">├─ </span><i class="ti ti-folder folder-icon" aria-hidden="true"></i><span class="folder-name">utils/</span></div>
+    <div class="node"><span class="prefix">│  └─ </span><i class="ti ti-file file-icon" aria-hidden="true"></i><span class="file-name">csvExporter.js</span><span class="tag tag-util">util</span><span class="feature-pill">blob → .csv download</span></div>
+    <div class="node"><span class="prefix">└─ </span><i class="ti ti-file file-icon" aria-hidden="true"></i><span class="file-name">index.js</span><span class="feature-pill">barrel export</span></div>
+  </div>
+</div>
+
+<!-- Shared -->
+<div class="category-block">
+  <div class="cat-header">
+    <i class="ti ti-packages" aria-hidden="true" style="color:#5F5E5A;font-size:16px"></i>
+    <span class="cat-title">shared/</span>
+    <span class="cat-badge badge-shared">Common</span>
+    <span class="cat-req">Reusable across all categories</span>
+  </div>
+  <div class="tree">
+    <div class="node"><span class="prefix">├─ </span><i class="ti ti-file file-icon" aria-hidden="true"></i><span class="file-name">components/</span><span class="feature-pill">Button, Modal, Spinner, Badge</span></div>
+    <div class="node"><span class="prefix">├─ </span><i class="ti ti-file file-icon" aria-hidden="true"></i><span class="file-name">hooks/</span><span class="feature-pill">useDebounce, useFetch</span></div>
+    <div class="node"><span class="prefix">└─ </span><i class="ti ti-file file-icon" aria-hidden="true"></i><span class="file-name">utils/</span><span class="feature-pill">formatCurrency, formatDate</span></div>
+  </div>
+</div>
+
+</div>

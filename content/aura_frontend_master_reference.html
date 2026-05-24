@@ -1,0 +1,248 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-size:13px;color:var(--color-text-primary)}
+.tabs{display:flex;gap:4px;border-bottom:0.5px solid var(--color-border-tertiary);margin-bottom:16px;padding-bottom:0}
+.tab{padding:7px 14px;border-radius:6px 6px 0 0;cursor:pointer;font-size:12px;font-weight:500;color:var(--color-text-secondary);border:0.5px solid transparent;border-bottom:none;transition:all .15s;background:transparent}
+.tab.active{background:var(--color-background-primary);border-color:var(--color-border-tertiary);color:var(--color-text-primary);margin-bottom:-0.5px}
+.tab:hover:not(.active){color:var(--color-text-primary);background:var(--color-background-secondary)}
+.panel{display:none}.panel.active{display:block}
+
+.req-card{border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);margin-bottom:12px;overflow:hidden}
+.req-header{display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--color-background-secondary);border-bottom:0.5px solid var(--color-border-tertiary)}
+.req-num{font-size:11px;font-weight:500;padding:2px 8px;border-radius:12px;white-space:nowrap}
+.r1{background:#E6F1FB;color:#0C447C}.r2{background:#EAF3DE;color:#27500A}.r3{background:#FAEEDA;color:#633806}
+@media(prefers-color-scheme:dark){.r1{background:#0C447C;color:#B5D4F4}.r2{background:#27500A;color:#C0DD97}.r3{background:#633806;color:#FAC775}}
+.req-title{font-weight:500;font-size:13px}
+.feature-list{padding:10px 14px;display:flex;flex-direction:column;gap:6px}
+.feat{display:flex;align-items:flex-start;gap:8px;padding:6px 0;border-bottom:0.5px solid var(--color-border-tertiary);line-height:1.5}
+.feat:last-child{border-bottom:none}
+.feat-icon{font-size:15px;margin-top:1px;flex-shrink:0}
+.feat-body{}
+.feat-name{font-weight:500;font-size:12px;margin-bottom:2px}
+.feat-desc{font-size:11px;color:var(--color-text-secondary)}
+.code{font-family:var(--font-mono);font-size:10px;background:var(--color-background-secondary);padding:1px 5px;border-radius:3px;border:0.5px solid var(--color-border-tertiary)}
+
+.tool-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+.tool-card{border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:10px 12px}
+.tool-name{font-weight:500;font-size:12px;margin-bottom:3px;display:flex;align-items:center;gap:6px}
+.tool-use{font-size:11px;color:var(--color-text-secondary);margin-bottom:5px}
+.tool-why{font-size:11px;color:var(--color-text-tertiary);border-left:2px solid var(--color-border-secondary);padding-left:6px;line-height:1.5}
+.cat-label{font-size:11px;font-weight:500;color:var(--color-text-tertiary);margin:14px 0 6px;text-transform:uppercase;letter-spacing:.05em}
+
+.hole-card{border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);margin-bottom:10px;overflow:hidden}
+.hole-header{display:flex;align-items:center;gap:8px;padding:8px 12px;border-bottom:0.5px solid var(--color-border-tertiary)}
+.sev{font-size:10px;font-weight:500;padding:2px 7px;border-radius:10px;white-space:nowrap}
+.sev-high{background:#FCEBEB;color:#A32D2D}.sev-med{background:#FAEEDA;color:#854F0B}.sev-low{background:#EAF3DE;color:#3B6D11}
+@media(prefers-color-scheme:dark){.sev-high{background:#791F1F;color:#F7C1C1}.sev-med{background:#633806;color:#FAC775}.sev-low{background:#27500A;color:#C0DD97}}
+.hole-title{font-weight:500;font-size:12px}
+.hole-body{padding:10px 12px;display:flex;flex-direction:column;gap:5px}
+.hole-prob{font-size:11px;color:var(--color-text-secondary)}
+.hole-fix-label{font-size:10px;font-weight:500;color:var(--color-text-success);margin-top:3px}
+.hole-fix{font-size:11px;color:var(--color-text-primary);line-height:1.5}
+</style>
+
+<div style="padding:12px 0">
+
+<div class="tabs">
+  <div class="tab active" onclick="switchTab('req')"><i class="ti ti-list-check" aria-hidden="true"></i> Requirements</div>
+  <div class="tab" onclick="switchTab('tools')"><i class="ti ti-tool" aria-hidden="true"></i> Tools & Utils</div>
+  <div class="tab" onclick="switchTab('holes')"><i class="ti ti-alert-triangle" aria-hidden="true"></i> Loopholes</div>
+</div>
+
+<div id="req" class="panel active">
+  <div class="req-card">
+    <div class="req-header"><span class="req-num r1">Requirement 1</span><span class="req-title">Enterprise Data Grid</span></div>
+    <div class="feature-list">
+      <div class="feat">
+        <i class="ti ti-server feat-icon" style="color:#378ADD" aria-hidden="true"></i>
+        <div class="feat-body"><div class="feat-name">Server-side pagination</div><div class="feat-desc">Ek baar mein sirf 50 items fetch karo. Browser mein 50,000 rows kabhi render mat karo — DOM crash hoga. API ko <span class="code">?page=1&limit=50</span> bhejte rehna.</div></div>
+      </div>
+      <div class="feat">
+        <i class="ti ti-filter feat-icon" style="color:#378ADD" aria-hidden="true"></i>
+        <div class="feat-body"><div class="feat-name">3 column filters</div><div class="feat-desc">Category → Dropdown | Stock Level → Range Slider (e.g. &lt; 20) | Price → Min–Max input. Teeno filters combine hokar ek API call bnate hain.</div></div>
+      </div>
+      <div class="feat">
+        <i class="ti ti-search feat-icon" style="color:#378ADD" aria-hidden="true"></i>
+        <div class="feat-body"><div class="feat-name">Debounced omnisearch (500ms)</div><div class="feat-desc">Har keystroke pe API call nahi. 500ms ruko, phir query bhejo. <span class="code">useDebounce</span> hook banao ya lodash use karo.</div></div>
+      </div>
+      <div class="feat">
+        <i class="ti ti-arrows-sort feat-icon" style="color:#378ADD" aria-hidden="true"></i>
+        <div class="feat-body"><div class="feat-name">Sticky header + sortable columns</div><div class="feat-desc">Header scroll pe fix rehna chahiye (<span class="code">position:sticky</span>). Column header click pe sort toggle ho — asc → desc → none. Sort state URL params mein rakho.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="req-card">
+    <div class="req-header"><span class="req-num r2">Requirement 2</span><span class="req-title">Command Center — Analytics Dashboard</span></div>
+    <div class="feature-list">
+      <div class="feat">
+        <i class="ti ti-chart-bar feat-icon" style="color:#639922" aria-hidden="true"></i>
+        <div class="feat-body"><div class="feat-name">Widget 1 — Restock bar chart</div><div class="feat-desc">Top 10 lowest-stock products. Bar chart (Recharts <span class="code">BarChart</span>). Y-axis = product name, X-axis = stock count. Red/amber colors for urgency.</div></div>
+      </div>
+      <div class="feat">
+        <i class="ti ti-chart-pie feat-icon" style="color:#639922" aria-hidden="true"></i>
+        <div class="feat-body"><div class="feat-name">Widget 2 — Portfolio pie chart</div><div class="feat-desc">Category-wise inventory valuation. Recharts <span class="code">PieChart</span> ya <span class="code">Doughnut</span>. Tooltip pe % aur ₹ value dikhao.</div></div>
+      </div>
+      <div class="feat">
+        <i class="ti ti-layout-cards feat-icon" style="color:#639922" aria-hidden="true"></i>
+        <div class="feat-body"><div class="feat-name">Widget 3 — KPI summary cards</div><div class="feat-desc">3 cards: Total SKUs | Total Inventory Value ($) | Out of Stock Items. Big number + label format. API se ek hi endpoint se aane chahiye.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="req-card">
+    <div class="req-header"><span class="req-num r3">Requirement 3</span><span class="req-title">Export Module</span></div>
+    <div class="feature-list">
+      <div class="feat">
+        <i class="ti ti-file-download feat-icon" style="color:#BA7517" aria-hidden="true"></i>
+        <div class="feat-body"><div class="feat-name">Filtered CSV export</div><div class="feat-desc">Jo data abhi table mein dikh raha hai — wahi export ho, full 50,000 nahi. Current filters + search + sort apply hoke data lao, phir <span class="code">Blob → URL.createObjectURL</span> se download karo.</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="tools" class="panel">
+  <div class="cat-label">State & Data fetching</div>
+  <div class="tool-grid">
+    <div class="tool-card">
+      <div class="tool-name"><i class="ti ti-bolt" aria-hidden="true" style="color:#378ADD"></i> TanStack Query</div>
+      <div class="tool-use">Server state, caching, pagination</div>
+      <div class="tool-why">Automatic background refetch, stale-while-revalidate, aur <span class="code">keepPreviousData</span> — page badlane pe data flash nahi hoga. Redux se zyada simple hai server data ke liye.</div>
+    </div>
+    <div class="tool-card">
+      <div class="tool-name"><i class="ti ti-brand-react" aria-hidden="true" style="color:#378ADD"></i> Zustand</div>
+      <div class="tool-use">Filter state, UI state</div>
+      <div class="tool-why">Filter values (category, stock, price, search, sort) globally share karne ke liye. Context API pe re-renders zyada hote. Zustand lightweight hai aur DevTools support hai.</div>
+    </div>
+  </div>
+  <div class="cat-label">Performance utils</div>
+  <div class="tool-grid">
+    <div class="tool-card">
+      <div class="tool-name"><i class="ti ti-clock" aria-hidden="true" style="color:#BA7517"></i> use-debounce (npm)</div>
+      <div class="tool-use">Omnisearch 500ms delay</div>
+      <div class="tool-why">Custom hook likhne se safer. <span class="code">useDebouncedValue(search, 500)</span> — simple, tested, SSR safe. Lodash ke bina bhi kaam karta hai.</div>
+    </div>
+    <div class="tool-card">
+      <div class="tool-name"><i class="ti ti-table" aria-hidden="true" style="color:#BA7517"></i> TanStack Table</div>
+      <div class="tool-use">Data grid logic</div>
+      <div class="tool-why">Headless table library — sort, filter state sab built-in. 50,000 rows ka concern nahi kyunki server-side pagination hai, lekin column sort logic handmade nahi likhna padega.</div>
+    </div>
+  </div>
+  <div class="cat-label">Charts</div>
+  <div class="tool-grid">
+    <div class="tool-card">
+      <div class="tool-name"><i class="ti ti-chart-bar" aria-hidden="true" style="color:#639922"></i> Recharts</div>
+      <div class="tool-use">Bar + Pie charts</div>
+      <div class="tool-why">React ke liye native — Chart.js DOM directly access karta hai jo React lifecycle se clash karta hai. Recharts component-based hai, responsive by default, aur bundle size kam hai.</div>
+    </div>
+    <div class="tool-card">
+      <div class="tool-name"><i class="ti ti-palette" aria-hidden="true" style="color:#639922"></i> Recharts Tooltip</div>
+      <div class="tool-use">Custom chart tooltips</div>
+      <div class="tool-why">Built-in <span class="code">CustomTooltip</span> prop se apna JSX inject karo. Stock value ₹ format mein dikhane ke liye <span class="code">Intl.NumberFormat</span> saath use karo.</div>
+    </div>
+  </div>
+  <div class="cat-label">Export</div>
+  <div class="tool-grid">
+    <div class="tool-card">
+      <div class="tool-name"><i class="ti ti-file-text" aria-hidden="true" style="color:#993556"></i> Papa Parse</div>
+      <div class="tool-use">CSV generation</div>
+      <div class="tool-why"><span class="code">Papa.unparse(data)</span> — auto comma escaping, special characters handle, header row auto. Manual CSV string concat karna risky hai (commas in names break it).</div>
+    </div>
+    <div class="tool-card">
+      <div class="tool-name"><i class="ti ti-link" aria-hidden="true" style="color:#993556"></i> URL.createObjectURL</div>
+      <div class="tool-use">File download trigger</div>
+      <div class="tool-why">Browser native — koi library nahi chahiye. <span class="code">Blob → anchor click → revokeObjectURL</span>. FileSaver.js overkill hai iske liye.</div>
+    </div>
+  </div>
+  <div class="cat-label">DX & Styling</div>
+  <div class="tool-grid">
+    <div class="tool-card">
+      <div class="tool-name"><i class="ti ti-wind" aria-hidden="true" style="color:#5F5E5A"></i> Tailwind CSS</div>
+      <div class="tool-use">UI styling</div>
+      <div class="tool-why">Utility-first — sticky header ke liye <span class="code">sticky top-0</span>, responsive grid ke liye <span class="code">grid-cols-3</span>. CSS file maintainability zyada hoti hai enterprise projects mein.</div>
+    </div>
+    <div class="tool-card">
+      <div class="tool-name"><i class="ti ti-route" aria-hidden="true" style="color:#5F5E5A"></i> Next.js App Router</div>
+      <div class="tool-use">Routing + SSR</div>
+      <div class="tool-why">Filter state URL search params mein rakho (<span class="code">useSearchParams</span>) — browser back button, shareable links, aur bookmark support milta hai automatically.</div>
+    </div>
+  </div>
+</div>
+
+<div id="holes" class="panel">
+  <div class="hole-card">
+    <div class="hole-header"><span class="sev sev-high">Critical</span><span class="hole-title">Authentication ka koi mention nahi</span></div>
+    <div class="hole-body">
+      <div class="hole-prob">Document mein login system, user roles, ya session management nahi bataya gaya. Koi bhi URL se dashboard access kar sakta hai?</div>
+      <div class="hole-fix-label">Solution</div>
+      <div class="hole-fix">Next.js middleware mein route protection lagao. NextAuth.js ya Clerk use karo. Backend se "warehouse manager" aur "executive" roles clarify karo — kyunki Executive sirf dashboard dekhega, Manager export bhi karega. Yeh Backend team se ek meeting mein decide karna hoga.</div>
+    </div>
+  </div>
+
+  <div class="hole-card">
+    <div class="hole-header"><span class="sev sev-high">Critical</span><span class="hole-title">API contract define nahi hai</span></div>
+    <div class="hole-body">
+      <div class="hole-prob">Frontend ko pata nahi ki endpoint kya hai — <span class="code">/api/inventory?page=1&search=xyz</span> ya kuch aur? Response shape kya hogi? Error codes kya honge?</div>
+      <div class="hole-fix-label">Solution</div>
+      <div class="hole-fix">Backend se OpenAPI / Swagger spec maango before coding starts. Nahi mili toh MSW (Mock Service Worker) se mock API banao — frontend aur backend parallel develop hote hain. <span class="code">apiTypes.ts</span> file mein request/response types define karo aur dono sides share karo.</div>
+    </div>
+  </div>
+
+  <div class="hole-card">
+    <div class="hole-header"><span class="sev sev-med">Medium</span><span class="hole-title">Filter + sort + search — reset logic undefined</span></div>
+    <div class="hole-body">
+      <div class="hole-prob">Agar user page 5 pe hai aur naya filter lagata hai — kya page 1 pe auto-reset hoga? Document silent hai.</div>
+      <div class="hole-fix-label">Solution</div>
+      <div class="hole-fix">Rule banao: koi bhi filter/search change hone pe page automatically 1 pe reset ho. Zustand store mein filter change pe <span class="code">setPage(1)</span> call karo. Yeh expected UX hai — nahi kiya toh "no results" bug lagega.</div>
+    </div>
+  </div>
+
+  <div class="hole-card">
+    <div class="hole-header"><span class="sev sev-med">Medium</span><span class="hole-title">Export — kitna data download hoga?</span></div>
+    <div class="hole-body">
+      <div class="hole-prob">"Currently filtered table data" — sirf 50 rows jo screen pe hain, ya pure filtered dataset ke saare pages? Document unclear hai.</div>
+      <div class="hole-fix-label">Solution</div>
+      <div class="hole-fix">Client se pucho. Most likely answer: saara filtered data (not just page 1). Iske liye export pe ek alag API call karo — <span class="code">GET /api/inventory/export?filters=...</span> jo CSV directly stream kare. UI mein loading spinner lagao aur size warn karo ("~5000 rows export honge").</div>
+    </div>
+  </div>
+
+  <div class="hole-card">
+    <div class="hole-header"><span class="sev sev-med">Medium</span><span class="hole-title">Real-time dashboard — refresh strategy missing</span></div>
+    <div class="hole-body">
+      <div class="hole-prob">Document kehta hai "real-time analytics" — lekin WebSocket/polling ka koi mention nahi. KPI cards stale ho jayenge.</div>
+      <div class="hole-fix-label">Solution</div>
+      <div class="hole-fix">TanStack Query mein <span class="code">refetchInterval: 30000</span> (30 seconds) se start karo — simple aur kafi hai. WebSocket sirf tabhi add karo jab client explicitly "live" data maange. Dashboard pe last updated timestamp dikhao.</div>
+    </div>
+  </div>
+
+  <div class="hole-card">
+    <div class="hole-header"><span class="sev sev-low">Low</span><span class="hole-title">Empty states aur error states design nahi</span></div>
+    <div class="hole-body">
+      <div class="hole-prob">Agar koi SKU search se match nahi karta, ya API fail ho jaati hai — UI kya dikhayega? Document mein nahi bataya.</div>
+      <div class="hole-fix-label">Solution</div>
+      <div class="hole-fix">3 states design karo — Loading (skeleton rows), Empty ("No items match your filters" + clear filters button), Error ("Something went wrong" + retry button). Yeh ek shared <span class="code">&lt;DataState /&gt;</span> component mein wrap karo jo teeno conditions handle kare.</div>
+    </div>
+  </div>
+
+  <div class="hole-card">
+    <div class="hole-header"><span class="sev sev-low">Low</span><span class="hole-title">Mobile responsiveness undefined</span></div>
+    <div class="hole-body">
+      <div class="hole-prob">"Web-based dashboard" bola — kya warehouse manager phone se bhi use karega? Data grid 10 columns pe mobile mein toot jaata hai.</div>
+      <div class="hole-fix-label">Solution</div>
+      <div class="hole-fix">Client se confirm karo ki minimum screen size kya hai. Temporary fix: <span class="code">min-width: 1024px</span> likh do aur mobile pe "Desktop mode use karein" message dikhao. Proper mobile grid ek alag sprint mein lo.</div>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<script>
+function switchTab(id){
+  document.querySelectorAll('.tab').forEach((t,i)=>t.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  const tabs=['req','tools','holes'];
+  document.querySelectorAll('.tab')[tabs.indexOf(id)].classList.add('active');
+  document.getElementById(id).classList.add('active');
+}
+</script>

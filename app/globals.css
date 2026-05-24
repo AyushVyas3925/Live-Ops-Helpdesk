@@ -1,0 +1,72 @@
+@import url("https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css");
+@import "tailwindcss";
+
+:root {
+  color-scheme: light !important;
+  --color-text-primary: #111827;
+  --color-text-secondary: #4b5563;
+  --color-text-tertiary: #9ca3af;
+  --color-background-primary: #ffffff;
+  --color-background-secondary: #f9fafb;
+  --color-border-primary: #e5e7eb;
+  --color-border-secondary: #d1d5db;
+  --color-border-tertiary: #e5e7eb;
+  --color-text-success: #16a34a;
+  --border-radius-lg: 8px;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+@theme {
+  --color-aura-text-primary: var(--color-text-primary);
+  --color-aura-text-secondary: var(--color-text-secondary);
+  --color-aura-text-tertiary: var(--color-text-tertiary);
+  --color-aura-bg-primary: var(--color-background-primary);
+  --color-aura-bg-secondary: var(--color-background-secondary);
+  --color-aura-border-primary: var(--color-border-primary);
+  --color-aura-border-secondary: var(--color-border-secondary);
+  --color-aura-border-tertiary: var(--color-border-tertiary);
+  --color-aura-success: var(--color-text-success);
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.ticket-new {
+  animation: slideIn 0.3s ease-out forwards;
+}
+
+@layer base {
+  :root {
+    font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+  }
+
+  html {
+    color-scheme: light !important;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    background-color: #ffffff !important;
+    color: #111827 !important;
+  }
+
+  input, select, textarea, option {
+    background-color: #ffffff !important;
+    color: #111827 !important;
+  }
+
+  *:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px #3b82f6;
+  }
+}
+
