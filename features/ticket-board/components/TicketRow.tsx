@@ -87,7 +87,7 @@ export default function TicketRow({ ticket, lock, isNew, onEdit, onUnlock }: Tic
       aria-label={`Ticket ${ticket.id}: ${ticket.subject}`}
       style={{
         display: 'grid',
-        gridTemplateColumns: '90px 1fr 100px 110px 130px 100px 90px',
+        gridTemplateColumns: '80px 1fr 100px 110px 140px 80px 90px',
         gap: 0,
         padding: '13px 16px',
         borderBottom: '1px solid #F1F5F9',

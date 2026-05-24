@@ -186,25 +186,6 @@ export default function TicketBoard() {
         </button>
       </div>
 
-      {/* ════════════════════════ COLUMN HEADERS ════════════════════════ */}
-      <div
-        className="grid items-center sticky top-0 z-10"
-        style={{
-          gridTemplateColumns: '90px 1fr 100px 110px 130px 100px 90px',
-          gap: 0,
-          padding: '9px 16px',
-          background: '#F9FAFB',
-          borderBottom: '1px solid #E5E7EB',
-          borderLeft: '3px solid transparent',
-        }}
-      >
-        {['Ticket ID', 'Subject / Destination', 'Priority', 'Status', 'Assigned Agent', 'Created', 'Action'].map(col => (
-          <span key={col} style={{ fontSize: 10, fontWeight: 600, color: '#6B7280', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
-            {col}
-          </span>
-        ))}
-      </div>
-
       {/* ════════════════════════ TICKET ROWS ════════════════════════ */}
       <div
         className="flex-1 overflow-y-auto overflow-x-auto"
@@ -212,7 +193,25 @@ export default function TicketBoard() {
         aria-label="Support tickets"
         style={{ background: '#F8FAFC' }}
       >
-        <div style={{ minWidth: 780 }}>
+        <div style={{ minWidth: 840 }}>
+          {/* ════════════════════════ COLUMN HEADERS ════════════════════════ */}
+          <div
+            className="grid items-center sticky top-0 z-10"
+            style={{
+              gridTemplateColumns: '80px 1fr 100px 110px 140px 80px 90px',
+              gap: 0,
+              padding: '10px 16px',
+              background: '#F9FAFB',
+              borderBottom: '1px solid #E2E8F0',
+              borderLeft: '3px solid transparent',
+            }}
+          >
+            {['Ticket ID', 'Subject / Destination', 'Priority', 'Status', 'Assigned Agent', 'Created', 'Action'].map(col => (
+              <span key={col} style={{ fontSize: 10, fontWeight: 600, color: '#6B7280', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+                {col}
+              </span>
+            ))}
+          </div>
           {isLoading ? (
             Array.from({ length: 8 }).map((_, i) => (
               <div

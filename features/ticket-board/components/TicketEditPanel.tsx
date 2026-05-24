@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { formatDistanceToNow } from 'date-fns';
 import type { Ticket } from '@/shared/types/ticket.types';
 import SaveCloseControls from '@/features/connection-resilience/components/SaveCloseControls';
@@ -22,6 +22,26 @@ export default function TicketEditPanel({ ticket, onSave, onClose, unlockTicket 
   const [notes,      setNotes]      = useState('');
   const [resolution, setResolution] = useState('');
   const [isSaving,   setIsSaving]   = useState(false);
+  const notesRef                    = useRef<HTMLTextAreaElement>(null);
+
+  useEffect(() => {
+    // Auto-focus on mount
+    if (notesRef.current) {
+      notesRef.current.focus();
+    }
+
+    // Escape key listener to close and unlock
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        unlockTicket(ticket.id);
+        onClose();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [ticket.id, unlockTicket, onClose]);
 
   const handleSave = async () => {
     setIsSaving(true);
@@ -128,6 +148,7 @@ export default function TicketEditPanel({ ticket, onSave, onClose, unlockTicket 
             </label>
             <textarea
               id={`notes-${ticket.id}`}
+              ref={notesRef}
               value={notes}
               onChange={e => setNotes(e.target.value)}
               rows={4}
