@@ -19,6 +19,12 @@ const PRIORITY_PILL: Record<string, { background: string; color: string; border:
   normal:   { background: '#EFF6FF', color: '#1D4ED8', border: '1px solid #BFDBFE' },
 };
 
+const PRIORITY_BORDER: Record<string, string> = {
+  critical: '3px solid #EF4444',
+  high:     '3px solid #F59E0B',
+  normal:   '3px solid #3B82F6',
+};
+
 export default function TicketEditPanel({ ticket, onSave, onClose, unlockTicket }: TicketEditPanelProps) {
   const [notes,      setNotes]      = useState('');
   const [resolution, setResolution] = useState('');
@@ -168,14 +174,16 @@ export default function TicketEditPanel({ ticket, onSave, onClose, unlockTicket 
 
       {/* Description */}
       <div style={{ padding: '14px 20px', borderBottom: '1px solid #E5E7EB', background: '#FFFFFF' }}>
-        <p style={{ fontSize: 10, fontWeight: 700, color: '#9CA3AF', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 6 }}>
+        <p style={{ fontSize: 10, fontWeight: 700, color: '#4B5563', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 6 }}>
           Cargo details / Issue Description
         </p>
         <p
           style={{
-            fontSize: 12, color: '#4B5563', lineHeight: 1.6,
-            background: '#F9FAFB', padding: '10px 12px',
-            borderRadius: 6, border: '1px solid #E5E7EB',
+            fontSize: 12, color: '#374151', lineHeight: 1.6,
+            background: '#F8FAFC', padding: '12px 14px',
+            borderRadius: 6, 
+            border: '1px solid #E2E8F0',
+            borderLeft: PRIORITY_BORDER[ticket.priority] ?? '3px solid #3B82F6',
           }}
         >
           {ticket.description}
@@ -183,11 +191,11 @@ export default function TicketEditPanel({ ticket, onSave, onClose, unlockTicket 
       </div>
 
       {/* Form */}
-      <div style={{ flex: 1, overflowY: 'auto', padding: '16px 20px', display: 'flex', flexDirection: 'column', gap: 16, background: '#FFFFFF' }}>
+      <div style={{ flex: 1, overflowY: 'auto', padding: '20px 20px', display: 'flex', flexDirection: 'column', gap: 20, background: '#F8FAFC' }}>
         <div>
           <label
             htmlFor={`notes-${ticket.id}`}
-            style={{ display: 'block', fontSize: 10, fontWeight: 700, color: '#9CA3AF', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 6 }}
+            style={{ display: 'block', fontSize: 10, fontWeight: 700, color: '#4B5563', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 6 }}
           >
             Agent Operational Notes
           </label>
@@ -205,7 +213,7 @@ export default function TicketEditPanel({ ticket, onSave, onClose, unlockTicket 
         <div>
           <label
             htmlFor={`resolution-${ticket.id}`}
-            style={{ display: 'block', fontSize: 10, fontWeight: 700, color: '#9CA3AF', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 6 }}
+            style={{ display: 'block', fontSize: 10, fontWeight: 700, color: '#4B5563', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 6 }}
           >
             Resolution Protocol
           </label>
