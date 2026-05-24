@@ -201,8 +201,8 @@ export default function TicketBoard() {
           <div
             className="grid items-center sticky top-0 z-10"
             style={{
-              gridTemplateColumns: '80px 1fr 100px 110px 140px 80px 90px',
-              gap: 0,
+              gridTemplateColumns: '70px 2.2fr 1.1fr 1.1fr 1.5fr 1fr 1fr',
+              gap: '16px',
               padding: '10px 16px',
               background: '#F9FAFB',
               borderBottom: '1px solid #E2E8F0',
