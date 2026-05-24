@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "concurrently --kill-others-on-fail -n \"next,socket\" -c \"cyan,green\" \"next dev --no-turbopack\" \"node server/index.js\"",
+    "dev": "concurrently --kill-others-on-fail -n \"next,socket\" -c \"cyan,green\" \"next dev --webpack\" \"node server/index.js\"",
     "build": "next build",
     "start": "next start",
     "lint": "eslint"
