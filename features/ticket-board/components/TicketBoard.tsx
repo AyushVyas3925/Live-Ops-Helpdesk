@@ -196,13 +196,13 @@ export default function TicketBoard() {
         aria-label="Support tickets"
         style={{ background: '#F8FAFC' }}
       >
-        <div style={{ minWidth: 840 }}>
+        <div style={{ minWidth: 880 }}>
           {/* ════════════════════════ COLUMN HEADERS ════════════════════════ */}
           <div
             className="grid items-center sticky top-0 z-10"
             style={{
-              gridTemplateColumns: '70px 2.2fr 1.1fr 1.1fr 1.5fr 1fr 1fr',
-              gap: '16px',
+              gridTemplateColumns: '80px 1fr 120px 120px 150px 100px 100px',
+              gap: 0,
               padding: '10px 16px',
               background: '#F9FAFB',
               borderBottom: '1px solid #E2E8F0',
