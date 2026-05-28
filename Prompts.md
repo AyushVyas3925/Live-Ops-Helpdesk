@@ -52,3 +52,25 @@ Because we removed the dark backdrop overlay to keep the sidebar non-blocking, t
 Implement a zero-dependency focus trapping mechanism that intercepts the `Tab` and `Shift+Tab` keyboard inputs to loop focus strictly within the drawer's active form controls.
 
 **Decision made:** Implemented keyboard focus trapping in `features/ticket-board/components/TicketEditPanel.tsx` using `useRef` and a `keydown` event listener. When the component mounts, it queries all focusable elements inside the drawer and wraps key focus navigation between the first and last element, keeping the background table untouchable via keyboard navigation.
+
+---
+
+**Problem 6: Socket connecting twice in development — React 18 Strict Mode**
+
+During development, I noticed the socket was firing the `agent_join` event twice on every page load, which caused the presence counter to temporarily show duplicate agents. I couldn't figure out why it was happening only in dev mode and not in production builds.
+
+**AI response summary:**
+React 18's Strict Mode intentionally double-invokes `useEffect` in development to help detect side-effect bugs. Since `socket.connect()` runs inside a `useEffect`, it fires twice — creating two connections to the server. The fix is to set `autoConnect: false` in the socket client config and only call `socket.connect()` manually inside `useEffect`, paired with a `socket.disconnect()` in the cleanup return. This way, when Strict Mode unmounts and remounts the component, the first connection is properly torn down before the second one starts.
+
+**Decision made:** Set `autoConnect: false` in `shared/socket/socketClient.ts` and moved the `.connect()` call into the `SocketProvider` `useEffect` in `shared/context/SocketContext.tsx`. The cleanup function calls `socket.disconnect()`, so even when React Strict Mode double-fires the effect, the socket connection is properly recycled without duplicate agent registrations on the server.
+
+---
+
+**Problem 7: Choosing the right data structure for in-memory lock state on the server**
+
+I initially used a plain JavaScript object (`{}`) to store which tickets were locked and by whom. But I was running into issues with property enumeration and accidental prototype pollution when ticket IDs looked like built-in property names.
+
+**AI response summary:**
+Use a `Map` instead of a plain object for server-side state. Maps are designed for frequent additions and deletions of key-value pairs, they don't have prototype chain issues, and they guarantee insertion-order iteration. For the agents registry (mapping `socket.id` to agent info), use a second `Map`. This keeps both data structures consistent and avoids edge cases with `hasOwnProperty` checks.
+
+**Decision made:** Replaced both the locks store and the agents store with `new Map()` in `server/index.js`. Locks use `ticketId` as the key and the full lock object (ticketId, agentId, agentName, lockedAt) as the value. Agents use `socket.id` as the key. When broadcasting state to clients (e.g., on `get_lock_state`), we convert to array with `Array.from(locks.values())` since JSON doesn't serialize Maps natively.
