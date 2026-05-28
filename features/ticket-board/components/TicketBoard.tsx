@@ -22,13 +22,12 @@ const DEMO_SUBJECTS = [
 const DEMO_AGENTS = ['Marcus T.', 'Priya S.', 'Jordan K.', 'Aisha R.'];
 
 export default function TicketBoard() {
-  const { tickets, isLoading, newTicketIds, addTicket } = useTicketList();
+  const { tickets, isLoading, newTicketIds } = useTicketList();
   const { locks, connectedAgents, lockTicket, unlockTicket } = useTicketLock();
 
   const [search, setSearch]               = useState('');
   const [priorityFilter, setPriFilter]    = useState<PriorityFilter>('all');
   const [editingTicket, setEditingTicket] = useState<Ticket | null>(null);
-  const simCounterRef = useRef(2001);
   const simIdxRef     = useRef(0);
 
   const socket = useSocket();

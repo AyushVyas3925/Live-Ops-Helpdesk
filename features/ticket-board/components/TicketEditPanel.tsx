@@ -46,7 +46,8 @@ export default function TicketEditPanel({ ticket, onSave, onClose, unlockTicket 
   const asideRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
-    setMounted(true);
+    const timer = setTimeout(() => setMounted(true), 0);
+    return () => clearTimeout(timer);
   }, []);
 
   const handleCloseTransition = useCallback(() => {

@@ -12,7 +12,6 @@ export default function NewTicketToast({ ticket, onDismiss }: NewTicketToastProp
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    // Trigger animation after mount
     requestAnimationFrame(() => setVisible(true));
     const timer = setTimeout(() => {
       setVisible(false);

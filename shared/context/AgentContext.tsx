@@ -40,7 +40,11 @@ export function AgentProvider({ children }: { children: ReactNode }) {
       localStorage.setItem('agentName', agentName);
     }
 
-    setAgent({ agentId, agentName, initials: getInitials(agentName) });
+    const timer = setTimeout(() => {
+      setAgent({ agentId, agentName, initials: getInitials(agentName) });
+    }, 0);
+
+    return () => clearTimeout(timer);
   }, []);
 
   return (
