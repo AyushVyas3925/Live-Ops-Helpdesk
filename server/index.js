@@ -6,6 +6,13 @@ const cors = require('cors');
 const app = express();
 app.use(cors());
 
+const { getSeedTickets } = require('./seedTickets');
+const ticketsList = getSeedTickets();
+
+app.get('/api/tickets', (req, res) => {
+  res.json({ tickets: ticketsList });
+});
+
 const httpServer = createServer(app);
 const io = new Server(httpServer, {
   cors: { origin: '*', methods: ['GET', 'POST'] },
@@ -79,6 +86,7 @@ io.on('connection', (socket) => {
       id: ticketId,
       createdAt: new Date().toISOString(),
     };
+    ticketsList.unshift(newTicket);
     io.emit('new_ticket', newTicket);
   });
 
@@ -116,6 +124,7 @@ setInterval(() => {
     location: 'Dallas, TX (HQ)',
   };
   demoIndex++;
+  ticketsList.unshift(ticket);
   io.emit('new_ticket', ticket);
 }, 45000);
 
