@@ -40,7 +40,6 @@ export function useTicketLock() {
       setConnectedAgents(agents);
     };
 
-    // Re-sync after reconnect — server sends full lock state
     const onConnect = () => socket.emit('get_lock_state');
 
     socket.on('ticket_locked', onTicketLocked);
@@ -68,7 +67,6 @@ export function useTicketLock() {
       agentId: agent.agentId,
       agentName: agent.agentName,
     };
-    // No optimistic update — wait for server broadcast of ticket_locked
     socket.emit('lock_ticket', payload);
   }, [socket, agent]);
 

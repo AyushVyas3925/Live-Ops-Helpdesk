@@ -6,7 +6,6 @@ interface AgentPresenceBarProps {
   agents: Agent[];
 }
 
-/* ── Deterministic color from agentId ── */
 const PALETTE_BG = [
   '#1e3a8a', '#4c1d95', '#78350f', '#134e4a',
   '#1e3a5f', '#3b1764', '#7c2d12', '#14532d',
@@ -39,7 +38,6 @@ export default function AgentPresenceBar({ agents }: AgentPresenceBarProps) {
           style={{ position: 'relative', marginLeft: i > 0 ? -6 : 0, zIndex: 10 - i }}
           title={agent.editingTicketId ? `${agent.agentName} — editing #${agent.editingTicketId}` : agent.agentName}
         >
-          {/* Avatar circle */}
           <div
             style={{
               width: 32,
@@ -64,7 +62,6 @@ export default function AgentPresenceBar({ agents }: AgentPresenceBarProps) {
             {getInitials(agent.agentName)}
           </div>
 
-          {/* Online status dot */}
           <span
             aria-hidden="true"
             style={{

@@ -26,7 +26,6 @@ export default function SaveCloseControls({ ticketId, onSave, onClose, isSaving 
 
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-      {/* Close button */}
       <button
         id={`close-btn-${ticketId}`}
         onClick={handleClose}
@@ -37,7 +36,6 @@ export default function SaveCloseControls({ ticketId, onSave, onClose, isSaving 
         Close
       </button>
 
-      {/* Save button */}
       <button
         id={`save-btn-${ticketId}`}
         onClick={handleSave}

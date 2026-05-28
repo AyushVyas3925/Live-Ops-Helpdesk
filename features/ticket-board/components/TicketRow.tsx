@@ -14,14 +14,12 @@ function formatShortTime(dateString: string): string {
   return `${diffDays}d ago`;
 }
 
-/* ── Priority pill styles (light theme) ── */
 const PRIORITY_PILL: Record<string, { background: string; color: string }> = {
   critical: { background: '#FEE2E2', color: '#991B1B' },
   high:     { background: '#FEF3C7', color: '#92400E' },
   normal:   { background: '#EFF6FF', color: '#1D4ED8' },
 };
 
-/* ── Status pill styles (light theme) ── */
 const STATUS_PILL: Record<string, { background: string; color: string }> = {
   open:        { background: '#DCFCE7', color: '#166534' },
   in_progress: { background: '#EFF6FF', color: '#1D4ED8' },
@@ -32,7 +30,6 @@ const STATUS_LABEL: Record<string, string> = {
   open: 'Open', in_progress: 'In Progress', closed: 'Closed',
 };
 
-/* ── Agent mini-avatar colors (same palette as reference HTML) ── */
 const AGENT_BG: Record<string, string> = {
   'Marcus T.':  '#1e3a8a',
   'Priya S.':   '#4c1d95',
@@ -66,7 +63,6 @@ export default function TicketRow({ ticket, lock, isNew, onEdit, onUnlock }: Tic
   const isLockedByMe    = lock?.agentId === agentId;
   const isLockedByOther = !!lock && !isLockedByMe;
 
-  /* ── Row class (3 states) ── */
   let rowClass = isNew ? 'ticket-new ' : '';
   if (isLockedByOther) rowClass += 'row-locked-other';
   else if (isLockedByMe) rowClass += 'row-locked-me';
@@ -96,7 +92,6 @@ export default function TicketRow({ ticket, lock, isNew, onEdit, onUnlock }: Tic
         position: 'relative',
       }}
     >
-      {/* Ticket ID */}
       <span
         style={{
           fontFamily: 'ui-monospace, monospace',
@@ -108,7 +103,6 @@ export default function TicketRow({ ticket, lock, isNew, onEdit, onUnlock }: Tic
         #{ticket.id}
       </span>
 
-      {/* Subject + lock badge */}
       <div style={{ minWidth: 0, paddingRight: 8 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 7, minWidth: 0 }}>
           <span
@@ -124,7 +118,6 @@ export default function TicketRow({ ticket, lock, isNew, onEdit, onUnlock }: Tic
             {ticket.subject}
           </span>
 
-          {/* Lock badge */}
           {isLockedByOther && (
             <span
               style={{
@@ -161,8 +154,7 @@ export default function TicketRow({ ticket, lock, isNew, onEdit, onUnlock }: Tic
         </p>
       </div>
 
-      {/* Priority pill */}
-      <div>
+      <div className="flex items-center">
         <span
           style={{
             display: 'inline-flex', alignItems: 'center', gap: 4,
@@ -178,7 +170,6 @@ export default function TicketRow({ ticket, lock, isNew, onEdit, onUnlock }: Tic
         </span>
       </div>
 
-      {/* Status pill */}
       <div>
         <span
           style={{
@@ -195,7 +186,6 @@ export default function TicketRow({ ticket, lock, isNew, onEdit, onUnlock }: Tic
         </span>
       </div>
 
-      {/* Agent cell */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 7, fontSize: 12, color: isLockedByOther ? '#9CA3AF' : '#374151' }}>
         <span
           style={{
@@ -212,15 +202,12 @@ export default function TicketRow({ ticket, lock, isNew, onEdit, onUnlock }: Tic
         </span>
       </div>
 
-      {/* Created time */}
       <span style={{ fontFamily: 'ui-monospace, monospace', fontSize: 11, color: '#9CA3AF', whiteSpace: 'nowrap' }}>
         {formatShortTime(ticket.createdAt)}
       </span>
 
-      {/* Action button — 3 states */}
       <span onClick={e => e.stopPropagation()}>
         {isLockedByOther ? (
-          /* Locked by someone else */
           <button
             id={`edit-btn-${ticket.id}`}
             disabled
@@ -232,7 +219,6 @@ export default function TicketRow({ ticket, lock, isNew, onEdit, onUnlock }: Tic
             Locked
           </button>
         ) : isLockedByMe ? (
-          /* Locked by me — show Release */
           <button
             id={`edit-btn-${ticket.id}`}
             onClick={() => onUnlock(ticket.id)}
@@ -243,7 +229,6 @@ export default function TicketRow({ ticket, lock, isNew, onEdit, onUnlock }: Tic
             Release
           </button>
         ) : (
-          /* Unlocked — show Edit */
           <button
             id={`edit-btn-${ticket.id}`}
             onClick={() => onEdit(ticket)}

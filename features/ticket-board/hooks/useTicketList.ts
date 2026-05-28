@@ -23,7 +23,6 @@ export function useTicketList() {
       setTickets(prev => [ticket, ...prev]);
       setNewTicketIds(prev => new Set(prev).add(ticket.id));
 
-      // Remove slide-in class after animation completes
       setTimeout(() => {
         setNewTicketIds(prev => {
           const next = new Set(prev);

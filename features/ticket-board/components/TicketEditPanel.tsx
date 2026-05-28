@@ -53,7 +53,7 @@ export default function TicketEditPanel({ ticket, onSave, onClose, unlockTicket 
     setIsClosing(true);
     setTimeout(() => {
       onClose();
-    }, 300); // matches the animation exit duration
+    }, 300);
   }, [onClose]);
 
   useEffect(() => {
@@ -75,7 +75,6 @@ export default function TicketEditPanel({ ticket, onSave, onClose, unlockTicket 
     };
   }, [mounted, ticket.id, unlockTicket, handleCloseTransition]);
 
-  // Focus trap
   useEffect(() => {
     if (!mounted) return;
 
@@ -90,12 +89,12 @@ export default function TicketEditPanel({ ticket, onSave, onClose, unlockTicket 
     const handleTabKey = (e: KeyboardEvent) => {
       if (e.key !== 'Tab') return;
 
-      if (e.shiftKey) { // Shift + Tab
+      if (e.shiftKey) {
         if (document.activeElement === firstElement) {
           lastElement.focus();
           e.preventDefault();
         }
-      } else { // Tab
+      } else {
         if (document.activeElement === lastElement) {
           firstElement.focus();
           e.preventDefault();
@@ -128,7 +127,6 @@ export default function TicketEditPanel({ ticket, onSave, onClose, unlockTicket 
       aria-label={`Editing ticket ${ticket.id}`}
       className={`edit-panel-aside ${isClosing ? 'closing' : ''}`}
     >
-      {/* Panel Header & Metadata Box (Unified Layout) */}
       <div
         style={{
           padding: '16px 20px',
@@ -136,7 +134,6 @@ export default function TicketEditPanel({ ticket, onSave, onClose, unlockTicket 
           background: '#F9FAFB',
         }}
       >
-        {/* Top row: Ticket ID & Priority Badge perfectly aligned */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6 }}>
           <span style={{ fontFamily: 'ui-monospace, monospace', fontSize: 11, color: '#6B7280', fontWeight: 600 }}>
             #{ticket.id}
@@ -154,12 +151,10 @@ export default function TicketEditPanel({ ticket, onSave, onClose, unlockTicket 
           </span>
         </div>
 
-        {/* Subject Title */}
         <h2 style={{ fontWeight: 700, color: '#111827', fontSize: 15, lineHeight: 1.35, marginBottom: 10 }}>
           {ticket.subject}
         </h2>
 
-        {/* Unified Metadata Row */}
         <div
           style={{
             display: 'flex', flexWrap: 'wrap', alignItems: 'center',
@@ -182,7 +177,6 @@ export default function TicketEditPanel({ ticket, onSave, onClose, unlockTicket 
         </div>
       </div>
 
-      {/* Description */}
       <div style={{ padding: '14px 20px', borderBottom: '1px solid #E5E7EB', background: '#FFFFFF' }}>
         <p style={{ fontSize: 10, fontWeight: 700, color: '#4B5563', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 6 }}>
           Cargo details / Issue Description
@@ -200,7 +194,6 @@ export default function TicketEditPanel({ ticket, onSave, onClose, unlockTicket 
         </p>
       </div>
 
-      {/* Form */}
       <div style={{ flex: 1, overflowY: 'auto', padding: '20px 20px', display: 'flex', flexDirection: 'column', gap: 20, background: '#F8FAFC' }}>
         <div>
           <label
@@ -238,7 +231,6 @@ export default function TicketEditPanel({ ticket, onSave, onClose, unlockTicket 
         </div>
       </div>
 
-      {/* Footer */}
       <div
         style={{
           padding: '14px 20px',

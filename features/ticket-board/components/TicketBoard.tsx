@@ -48,12 +48,12 @@ export default function TicketBoard() {
     };
   }, [socket]);
 
-  /* ── Derived stats ── */
+
   const criticalCount = tickets.filter(t => t.priority === 'critical').length;
   const openCount     = tickets.filter(t => t.status === 'open').length;
   const inProgCount   = tickets.filter(t => t.status === 'in_progress').length;
 
-  /* ── Filtered list ── */
+
   const filtered = useMemo(() => {
     const q = search.toLowerCase();
     return tickets.filter(t => {
@@ -66,7 +66,7 @@ export default function TicketBoard() {
     });
   }, [tickets, search, priorityFilter]);
 
-  /* ── Edit / lock handlers ── */
+
   const handleEdit = useCallback((ticket: Ticket) => {
     if (editingTicket && editingTicket.id !== ticket.id) {
       unlockTicket(editingTicket.id);
@@ -78,29 +78,25 @@ export default function TicketBoard() {
   const handleSave  = useCallback(() => setEditingTicket(null), []);
   const handleClose = useCallback(() => setEditingTicket(null), []);
 
-  /* ── Simulate demo ticket (client-side injection) ── */
+
   const simulateTicket = useCallback(() => {
-    const counter = simCounterRef.current++;
     const idx     = simIdxRef.current++;
-    const demo: Ticket = {
-      id:          `TK-${counter}`,
+    const demo = {
       subject:     DEMO_SUBJECTS[idx % DEMO_SUBJECTS.length],
       priority:    (['critical', 'high', 'normal'] as Priority[])[Math.floor(Math.random() * 3)],
       status:      'open',
       agentId:     'demo',
       agentName:   DEMO_AGENTS[Math.floor(Math.random() * DEMO_AGENTS.length)],
-      createdAt:   new Date().toISOString(),
       description: 'Simulated ticket for system demonstration.',
       location:    'Auto-dispatch',
     };
-    addTicket(demo);
-    setActiveToasts(prev => [...prev, demo]);
-  }, [addTicket]);
+    socket.emit('simulate_ticket', demo);
+  }, [socket]);
 
   return (
     <div className="flex flex-col h-screen overflow-hidden" style={{ background: '#F8FAFC' }}>
 
-      {/* ════════════════════════ TOP BAR ════════════════════════ */}
+
       <div
         className="flex items-center justify-between px-5 border-b"
         style={{ background: '#FFFFFF', borderColor: '#E5E7EB', padding: '14px 20px' }}
@@ -123,7 +119,7 @@ export default function TicketBoard() {
         </div>
       </div>
 
-      {/* ════════════════════════ STATS ROW ════════════════════════ */}
+
       <div className="stats-row">
         <div className="stat-cell stat-cell-critical">
           <span className="text-[22px] font-bold tabular-nums" style={{ color: '#DC2626' }}>{criticalCount}</span>
@@ -143,12 +139,11 @@ export default function TicketBoard() {
         </div>
       </div>
 
-      {/* ════════════════════════ TOOLBAR ════════════════════════ */}
+
       <div
         className="flex items-center gap-2.5 flex-wrap"
         style={{ background: '#FFFFFF', borderBottom: '1px solid #E5E7EB', padding: '12px 20px' }}
       >
-        {/* Search */}
         <div className="search-container">
           <i className="ti ti-search" style={{ color: '#9CA3AF', fontSize: 15 }} aria-hidden="true" />
           <input
@@ -165,7 +160,7 @@ export default function TicketBoard() {
           />
         </div>
 
-        {/* Filter buttons */}
+        {/* Filters */}
         {(['all', 'critical', 'high'] as const).map(f => (
           <button
             key={f}
@@ -178,7 +173,6 @@ export default function TicketBoard() {
           </button>
         ))}
 
-        {/* Simulate Ticket */}
         <button
           id="new-ticket-demo-btn"
           onClick={simulateTicket}
@@ -189,7 +183,7 @@ export default function TicketBoard() {
         </button>
       </div>
 
-      {/* ════════════════════════ TICKET ROWS ════════════════════════ */}
+
       <div
         className="flex-1 overflow-y-auto overflow-x-auto"
         role="table"
@@ -197,7 +191,6 @@ export default function TicketBoard() {
         style={{ background: '#F8FAFC' }}
       >
         <div style={{ minWidth: 880 }}>
-          {/* ════════════════════════ COLUMN HEADERS ════════════════════════ */}
           <div
             className="grid items-center sticky top-0 z-10"
             style={{
@@ -254,7 +247,7 @@ export default function TicketBoard() {
         </div>
       </div>
 
-      {/* ════════════════════════ EDIT PANEL ════════════════════════ */}
+
       {editingTicket && (
         <TicketEditPanel
           ticket={editingTicket}
@@ -264,7 +257,6 @@ export default function TicketBoard() {
         />
       )}
 
-      {/* Toast container */}
       <div style={{ position: 'fixed', bottom: 20, right: 20, zIndex: 50, display: 'flex', flexDirection: 'column', gap: 10 }}>
         {activeToasts.map(toast => (
           <NewTicketToast

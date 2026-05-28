@@ -9,7 +9,6 @@ export function useUnlockOnExit(ticketId: string | null) {
   useEffect(() => {
     if (!ticketId) return;
 
-    // Browser close / tab switch away — emit best-effort unlock
     const handleUnload = () => socket.emit('unlock_ticket', { ticketId });
     window.addEventListener('beforeunload', handleUnload);
 

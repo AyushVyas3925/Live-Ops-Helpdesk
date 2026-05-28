@@ -13,9 +13,8 @@ const io = new Server(httpServer, {
   pingInterval: 5000,
 });
 
-// In-memory state — a real server would persist this in Redis
-const locks = new Map();   // ticketId → { ticketId, agentId, agentName, lockedAt }
-const agents = new Map();  // socketId → { agentId, agentName, editingTicketId }
+const locks = new Map();
+const agents = new Map();
 
 function broadcastPresence() {
   io.emit('presence_update', Array.from(agents.values()));
@@ -34,12 +33,10 @@ io.on('connection', (socket) => {
   socket.on('agent_join', (agent) => {
     agents.set(socket.id, { ...agent, editingTicketId: null });
     broadcastPresence();
-    // Send current full lock state to newly joined agent
     socket.emit('lock_state', Array.from(locks.values()));
   });
 
   socket.on('lock_ticket', ({ ticketId, agentId, agentName }) => {
-    // If already locked by someone else, reject
     if (locks.has(ticketId) && locks.get(ticketId).agentId !== agentId) {
       socket.emit('lock_rejected', { ticketId, lockedBy: locks.get(ticketId).agentName });
       return;
@@ -48,14 +45,12 @@ io.on('connection', (socket) => {
     const lock = { ticketId, agentId, agentName, lockedAt: new Date().toISOString() };
     locks.set(ticketId, lock);
 
-    // Update agent presence to show what they're editing
     const agent = agents.get(socket.id);
     if (agent) {
       agents.set(socket.id, { ...agent, editingTicketId: ticketId });
       broadcastPresence();
     }
 
-    // Broadcast to ALL clients including sender — no optimistic updates on client
     io.emit('ticket_locked', lock);
   });
 
@@ -77,10 +72,19 @@ io.on('connection', (socket) => {
     socket.emit('lock_state', Array.from(locks.values()));
   });
 
+  socket.on('simulate_ticket', (ticket) => {
+    const ticketId = `TK-${2000 + demoIndex++}`;
+    const newTicket = {
+      ...ticket,
+      id: ticketId,
+      createdAt: new Date().toISOString(),
+    };
+    io.emit('new_ticket', newTicket);
+  });
+
   socket.on('disconnect', () => {
     const agent = agents.get(socket.id);
     if (agent) {
-      // Auto-unlock all tickets held by disconnected agent
       releaseAllLocksForAgent(agent.agentId);
       agents.delete(socket.id);
       io.emit('agent_left', { agentId: agent.agentId });
@@ -89,7 +93,6 @@ io.on('connection', (socket) => {
   });
 });
 
-// Emit a simulated new ticket every 45 seconds for demo
 const DEMO_SUBJECTS = [
   'Overheated engine — Unit RD-312, I-10 near El Paso TX',
   'Lost cargo claim — Shipment RD-7741, Houston TX',
