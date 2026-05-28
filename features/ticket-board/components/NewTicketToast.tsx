@@ -24,9 +24,8 @@ export default function NewTicketToast({ ticket, onDismiss }: NewTicketToastProp
     <div
       role="status"
       aria-live="polite"
-      className={`flex items-start gap-3 bg-white border border-gray-200 shadow-lg rounded-lg p-3.5 w-72 transition-all duration-300 ${
-        visible ? 'translate-y-0 opacity-100' : '-translate-y-4 opacity-0'
-      }`}
+      className={`flex items-start gap-3 bg-white border border-gray-200 shadow-lg rounded-lg p-3.5 w-72 transition-all duration-300 ${visible ? 'translate-y-0 opacity-100' : '-translate-y-4 opacity-0'
+        }`}
     >
       <div className="flex-shrink-0 w-7 h-7 bg-blue-50 rounded-full flex items-center justify-center border border-blue-100">
         <i className="ti ti-ticket text-blue-600 text-xs" aria-hidden="true" />
