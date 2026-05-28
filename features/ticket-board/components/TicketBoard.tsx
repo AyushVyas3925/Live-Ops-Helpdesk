@@ -6,8 +6,8 @@ import { useTicketLock } from '@/features/presence-lock/hooks/useTicketLock';
 import TicketRow from './TicketRow';
 import AgentPresenceBar from '@/features/presence-lock/components/AgentPresenceBar';
 import TicketEditPanel from './TicketEditPanel';
-import NewTicketToast from './NewTicketToast';
 import { useSocket } from '@/shared/context/SocketContext';
+import { useToast } from '@/shared/context/ToastContext';
 import type { Ticket, Priority } from '@/shared/types/ticket.types';
 
 type PriorityFilter = Priority | 'all';
@@ -31,21 +31,17 @@ export default function TicketBoard() {
   const simIdxRef     = useRef(0);
 
   const socket = useSocket();
-  const [activeToasts, setActiveToasts] = useState<Ticket[]>([]);
-
-  const handleDismissToast = useCallback((id: string) => {
-    setActiveToasts(prev => prev.filter(t => t.id !== id));
-  }, []);
+  const { toast } = useToast();
 
   useEffect(() => {
     const handleNewTicket = (ticket: Ticket) => {
-      setActiveToasts(prev => [...prev, ticket]);
+      toast(ticket);
     };
     socket.on('new_ticket', handleNewTicket);
     return () => {
       socket.off('new_ticket', handleNewTicket);
     };
-  }, [socket]);
+  }, [socket, toast]);
 
 
   const criticalCount = tickets.filter(t => t.priority === 'critical').length;
@@ -256,15 +252,6 @@ export default function TicketBoard() {
         />
       )}
 
-      <div style={{ position: 'fixed', bottom: 20, right: 20, zIndex: 50, display: 'flex', flexDirection: 'column', gap: 10 }}>
-        {activeToasts.map(toast => (
-          <NewTicketToast
-            key={toast.id}
-            ticket={toast}
-            onDismiss={() => handleDismissToast(toast.id)}
-          />
-        ))}
-      </div>
     </div>
   );
 }

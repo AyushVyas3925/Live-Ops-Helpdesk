@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import './globals.css';
 import { AgentProvider }  from '@/shared/context/AgentContext';
 import { SocketProvider } from '@/shared/context/SocketContext';
+import { ToastProvider }  from '@/shared/context/ToastContext';
 
 export const metadata: Metadata = {
   title:       'Live Ops Helpdesk — RapidDispatch Freight & Logistics',
@@ -23,7 +24,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       >
         <AgentProvider>
           <SocketProvider>
-            {children}
+            <ToastProvider>
+              {children}
+            </ToastProvider>
           </SocketProvider>
         </AgentProvider>
       </body>
