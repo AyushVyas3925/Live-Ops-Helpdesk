@@ -115,7 +115,7 @@ export default function TicketRow({ ticket, lock, isNew, onEdit, onUnlock }: Tic
             style={{
               fontSize: 13,
               fontWeight: 500,
-              color: isLockedByOther ? '#6B7280' : '#F3F4F6' === '#F3F4F6' ? '#111827' : '#111827',
+              color: isLockedByOther ? '#6B7280' : '#111827',
               overflow: 'hidden',
               textOverflow: 'ellipsis',
               whiteSpace: 'nowrap',
