@@ -1,24 +1,11 @@
 'use client';
 
 import type { Agent } from '@/shared/types/ticket.types';
+import { getPresenceAgentBg } from '@/shared/constants/theme';
+import { getInitials } from '@/shared/utils/stringUtils';
 
 interface AgentPresenceBarProps {
   agents: Agent[];
-}
-
-const PALETTE_BG = [
-  'bg-[#1e3a8a]', 'bg-[#4c1d95]', 'bg-[#78350f]', 'bg-[#134e4a]',
-  'bg-[#1e3a5f]', 'bg-[#3b1764]', 'bg-[#7c2d12]', 'bg-[#14532d]',
-];
-
-function agentBg(agentId: string): string {
-  let hash = 0;
-  for (let i = 0; i < agentId.length; i++) hash = agentId.charCodeAt(i) + ((hash << 5) - hash);
-  return PALETTE_BG[Math.abs(hash) % PALETTE_BG.length];
-}
-
-function getInitials(name: string) {
-  return name.split(' ').map(p => p[0]).join('').toUpperCase().slice(0, 2);
 }
 
 export default function AgentPresenceBar({ agents }: AgentPresenceBarProps) {
@@ -40,7 +27,7 @@ export default function AgentPresenceBar({ agents }: AgentPresenceBarProps) {
           title={agent.editingTicketId ? `${agent.agentName} — editing #${agent.editingTicketId}` : agent.agentName}
         >
           <div
-            className={`w-8 h-8 rounded-full flex items-center justify-center text-[11px] font-bold border-2 border-white cursor-default transition-transform duration-150 select-none hover:scale-110 text-white ${agentBg(agent.agentId)}`}
+            className={`w-8 h-8 rounded-full flex items-center justify-center text-[11px] font-bold border-2 border-white cursor-default transition-transform duration-150 select-none hover:scale-110 text-white ${getPresenceAgentBg(agent.agentId)}`}
             aria-label={agent.agentName}
           >
             {getInitials(agent.agentName)}

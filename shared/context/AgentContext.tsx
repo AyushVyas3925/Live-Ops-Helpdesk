@@ -1,15 +1,12 @@
 'use client';
 
 import { createContext, useContext, useState, useEffect, type ReactNode } from 'react';
+import { getInitials } from '@/shared/utils/stringUtils';
 
 const AGENT_NAMES = [
   'Priya S.', 'Marcus T.', 'Jordan K.', 'Aisha R.', 'Devon L.',
   'Camille W.', 'Ravi P.', 'Nadia O.', 'Tyler B.', 'Simone F.',
 ];
-
-function getInitials(name: string) {
-  return name.split(' ').map(p => p[0]).join('').toUpperCase();
-}
 
 interface AgentContextValue {
   agentId: string;

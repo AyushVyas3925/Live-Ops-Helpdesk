@@ -4,17 +4,8 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { createPortal } from 'react-dom';
 import type { Ticket } from '@/shared/types/ticket.types';
 import SaveCloseControls from '@/features/connection-resilience/components/SaveCloseControls';
-
-function formatShortTime(dateString: string): string {
-  const diffMs = Date.now() - new Date(dateString).getTime();
-  const diffMins = Math.floor(diffMs / 60000);
-  if (diffMins < 1) return '<1m ago';
-  const diffHrs = Math.floor(diffMins / 60);
-  if (diffHrs < 1) return `${diffMins}m ago`;
-  const diffDays = Math.floor(diffHrs / 24);
-  if (diffDays < 1) return `${diffHrs}h ago`;
-  return `${diffDays}d ago`;
-}
+import { formatShortTime } from '@/shared/utils/formatTime';
+import { PRIORITY_PILL_BORDER, PRIORITY_BORDER } from '@/shared/constants/theme';
 
 interface TicketEditPanelProps {
   ticket:       Ticket;
@@ -23,17 +14,6 @@ interface TicketEditPanelProps {
   unlockTicket: (ticketId: string) => void;
 }
 
-const PRIORITY_PILL: Record<string, string> = {
-  critical: 'bg-red-100 text-red-800 border border-red-200',
-  high:     'bg-amber-100 text-amber-800 border border-amber-200',
-  normal:   'bg-blue-50 text-blue-700 border border-blue-200',
-};
-
-const PRIORITY_BORDER: Record<string, string> = {
-  critical: 'border-l-[3px] border-l-red-500',
-  high:     'border-l-[3px] border-l-amber-500',
-  normal:   'border-l-[3px] border-l-blue-500',
-};
 
 export default function TicketEditPanel({ ticket, onSave, onClose, unlockTicket }: TicketEditPanelProps) {
   const [notes,      setNotes]      = useState('');
@@ -117,7 +97,7 @@ export default function TicketEditPanel({ ticket, onSave, onClose, unlockTicket 
     }, 300);
   };
 
-  const priStyle = PRIORITY_PILL[ticket.priority] ?? PRIORITY_PILL.normal;
+  const priStyle = PRIORITY_PILL_BORDER[ticket.priority] ?? PRIORITY_PILL_BORDER.normal;
 
   if (!mounted) return null;
 

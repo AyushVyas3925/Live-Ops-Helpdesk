@@ -2,52 +2,9 @@
 
 import type { Ticket, LockState } from '@/shared/types/ticket.types';
 import { useAgent } from '@/shared/context/AgentContext';
-
-function formatShortTime(dateString: string): string {
-  const diffMs = Date.now() - new Date(dateString).getTime();
-  const diffMins = Math.floor(diffMs / 60000);
-  if (diffMins < 1) return '<1m ago';
-  const diffHrs = Math.floor(diffMins / 60);
-  if (diffHrs < 1) return `${diffMins}m ago`;
-  const diffDays = Math.floor(diffHrs / 24);
-  if (diffDays < 1) return `${diffHrs}h ago`;
-  return `${diffDays}d ago`;
-}
-
-const PRIORITY_PILL: Record<string, string> = {
-  critical: 'bg-red-100 text-red-800',
-  high:     'bg-amber-100 text-amber-800',
-  normal:   'bg-blue-50 text-blue-700',
-};
-
-const STATUS_PILL: Record<string, string> = {
-  open:        'bg-green-100 text-green-800',
-  in_progress: 'bg-blue-50 text-blue-700',
-  closed:      'bg-gray-100 text-gray-500',
-};
-
-const STATUS_LABEL: Record<string, string> = {
-  open: 'Open', in_progress: 'In Progress', closed: 'Closed',
-};
-
-const AGENT_BG: Record<string, string> = {
-  'Marcus T.':  'bg-[#1e3a8a]',
-  'Priya S.':   'bg-[#4c1d95]',
-  'Jordan K.':  'bg-[#78350f]',
-  'Aisha R.':   'bg-[#134e4a]',
-  'Devon L.':   'bg-[#1e3a5f]',
-  'Camille W.': 'bg-[#3b1764]',
-  'Ravi P.':    'bg-[#7c2d12]',
-  'Nadia O.':   'bg-[#14532d]',
-  'Tyler B.':   'bg-[#1e1b4b]',
-  'Simone F.':  'bg-[#831843]',
-};
-function agentBg(name: string) {
-  return AGENT_BG[name] ?? 'bg-gray-700';
-}
-function getInitials(name: string) {
-  return name.split(' ').map(p => p[0]).join('').toUpperCase().slice(0, 2);
-}
+import { formatShortTime } from '@/shared/utils/formatTime';
+import { getInitials } from '@/shared/utils/stringUtils';
+import { PRIORITY_PILL, STATUS_PILL, STATUS_LABEL, getAgentBg } from '@/shared/constants/theme';
 
 interface TicketRowProps {
   ticket:   Ticket;
@@ -131,7 +88,7 @@ export default function TicketRow({ ticket, lock, isNew, onEdit, onUnlock }: Tic
       </div>
 
       <div className={`flex items-center gap-[7px] text-xs ${isLockedByOther ? 'text-gray-400' : 'text-gray-700'}`}>
-        <span className={`w-[26px] h-[26px] rounded-full flex items-center justify-center text-[10px] font-bold flex-shrink-0 text-white ${agentBg(ticket.agentName)}`}>
+        <span className={`w-[26px] h-[26px] rounded-full flex items-center justify-center text-[10px] font-bold flex-shrink-0 text-white ${getAgentBg(ticket.agentName)}`}>
           {getInitials(ticket.agentName)}
         </span>
         <span className="truncate">
