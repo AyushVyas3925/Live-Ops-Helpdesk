@@ -89,18 +89,15 @@ export default function TicketBoard() {
   }, [socket]);
 
   return (
-    <div className="flex flex-col h-screen overflow-hidden" style={{ background: '#F8FAFC' }}>
+    <div className="flex flex-col h-screen overflow-hidden bg-[#F8FAFC]">
 
 
-      <div
-        className="flex items-center justify-between px-5 border-b"
-        style={{ background: '#FFFFFF', borderColor: '#E5E7EB', padding: '14px 20px' }}
-      >
+      <div className="flex items-center justify-between px-5 border-b bg-white border-gray-200 py-[14px]">
         <div className="flex flex-col gap-0.5">
-          <span className="font-bold tracking-tight" style={{ fontSize: 17, color: '#111827' }}>
+          <span className="font-bold tracking-tight text-[17px] text-gray-900">
             RapidDispatch Live Ops
           </span>
-          <span className="flex items-center gap-1.5 text-[12px]" style={{ color: '#6B7280' }}>
+          <span className="flex items-center gap-1.5 text-[12px] text-gray-500">
             <span className="live-dot" aria-hidden="true" />
             <span>{tickets.length} active tickets</span>
             <span>&nbsp;·&nbsp;</span>
@@ -109,7 +106,7 @@ export default function TicketBoard() {
         </div>
 
         <div className="flex items-center gap-3">
-          <span className="text-[11px] font-medium" style={{ color: '#6B7280' }}>Online</span>
+          <span className="text-[11px] font-medium text-gray-500">Online</span>
           <AgentPresenceBar agents={connectedAgents} />
         </div>
       </div>
@@ -117,40 +114,34 @@ export default function TicketBoard() {
 
       <div className="stats-row">
         <div className="stat-cell stat-cell-critical">
-          <span className="text-[22px] font-bold tabular-nums" style={{ color: '#DC2626' }}>{criticalCount}</span>
-          <span className="text-[11px] uppercase tracking-wider" style={{ color: '#6B7280' }}>Critical</span>
+          <span className="text-[22px] font-bold tabular-nums text-red-600">{criticalCount}</span>
+          <span className="text-[11px] uppercase tracking-wider text-gray-500">Critical</span>
         </div>
         <div className="stat-cell stat-cell-open">
-          <span className="text-[22px] font-bold tabular-nums" style={{ color: '#D97706' }}>{openCount}</span>
-          <span className="text-[11px] uppercase tracking-wider" style={{ color: '#6B7280' }}>Open</span>
+          <span className="text-[22px] font-bold tabular-nums text-amber-600">{openCount}</span>
+          <span className="text-[11px] uppercase tracking-wider text-gray-500">Open</span>
         </div>
         <div className="stat-cell stat-cell-in-progress">
-          <span className="text-[22px] font-bold tabular-nums" style={{ color: '#2563EB' }}>{inProgCount}</span>
-          <span className="text-[11px] uppercase tracking-wider" style={{ color: '#6B7280' }}>In Progress</span>
+          <span className="text-[22px] font-bold tabular-nums text-blue-600">{inProgCount}</span>
+          <span className="text-[11px] uppercase tracking-wider text-gray-500">In Progress</span>
         </div>
         <div className="stat-cell stat-cell-active">
-          <span className="text-[22px] font-bold tabular-nums" style={{ color: '#16A34A' }}>{connectedAgents.length}</span>
-          <span className="text-[11px] uppercase tracking-wider" style={{ color: '#6B7280' }}>Agents Active</span>
+          <span className="text-[22px] font-bold tabular-nums text-green-600">{connectedAgents.length}</span>
+          <span className="text-[11px] uppercase tracking-wider text-gray-500">Agents Active</span>
         </div>
       </div>
 
 
-      <div
-        className="flex items-center gap-2.5 flex-wrap"
-        style={{ background: '#FFFFFF', borderBottom: '1px solid #E5E7EB', padding: '12px 20px' }}
-      >
+      <div className="flex items-center gap-2.5 flex-wrap bg-white border-b border-gray-200 py-3 px-5">
         <div className="search-container">
-          <i className="ti ti-search" style={{ color: '#9CA3AF', fontSize: 15 }} aria-hidden="true" />
+          <i className="ti ti-search text-gray-400 text-[15px]" aria-hidden="true" />
           <input
             id="ticket-search"
             type="search"
             placeholder="Search ticket subject, ID, location..."
             value={search}
             onChange={e => setSearch(e.target.value)}
-            style={{
-              flex: 1, border: 'none', outline: 'none', background: 'transparent',
-              fontSize: 13, color: '#111827',
-            }}
+            className="flex-1 border-none outline-none bg-transparent text-[13px] text-gray-900"
             aria-label="Search tickets"
           />
         </div>
@@ -173,32 +164,19 @@ export default function TicketBoard() {
           onClick={simulateTicket}
           className="btn-simulate-ticket ml-auto"
         >
-          <i className="ti ti-plus" style={{ fontSize: 14 }} aria-hidden="true" />
+          <i className="ti ti-plus text-sm" aria-hidden="true" />
           Simulate Ticket
         </button>
       </div>
 
 
-      <div
-        className="flex-1 overflow-y-auto overflow-x-auto"
-        role="table"
-        aria-label="Support tickets"
-        style={{ background: '#F8FAFC' }}
-      >
-        <div style={{ minWidth: 880 }}>
+      <div className="flex-1 overflow-y-auto overflow-x-auto bg-[#F8FAFC]" role="table" aria-label="Support tickets">
+        <div className="min-w-[880px]">
           <div
-            className="grid items-center sticky top-0 z-10"
-            style={{
-              gridTemplateColumns: '80px 1fr 120px 120px 150px 100px 100px',
-              gap: 0,
-              padding: '10px 16px',
-              background: '#F9FAFB',
-              borderBottom: '1px solid #E2E8F0',
-              borderLeft: '3px solid transparent',
-            }}
+            className="grid items-center sticky top-0 z-10 grid-cols-[80px_1fr_120px_120px_150px_100px_100px] gap-0 py-2.5 px-4 bg-gray-50 border-b border-gray-200 border-l-3 border-l-transparent"
           >
             {['Ticket ID', 'Subject / Destination', 'Priority', 'Status', 'Assigned Agent', 'Created', 'Action'].map(col => (
-              <span key={col} style={{ fontSize: 10, fontWeight: 600, color: '#6B7280', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+              <span key={col} className="text-[10px] font-semibold text-gray-500 uppercase tracking-[0.06em]">
                 {col}
               </span>
             ))}
@@ -207,22 +185,16 @@ export default function TicketBoard() {
             Array.from({ length: 8 }).map((_, i) => (
               <div
                 key={i}
-                style={{
-                  height: 52,
-                  background: i % 2 === 0 ? '#F9FAFB' : '#FFFFFF',
-                  borderBottom: '1px solid #F1F5F9',
-                  borderLeft: '3px solid #E2E8F0',
-                  animation: 'pulse 1.5s infinite',
-                }}
+                className={`h-[52px] ${i % 2 === 0 ? 'bg-gray-50' : 'bg-white'} border-b border-slate-100 border-l-3 border-slate-200 animate-pulse`}
               />
             ))
           ) : filtered.length === 0 ? (
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '80px 0', color: '#6B7280' }}>
-              <i className="ti ti-ticket-off" style={{ fontSize: 32, color: '#9CA3AF', marginBottom: 8 }} aria-hidden="true" />
-              <p style={{ fontSize: 14, fontWeight: 600 }}>No active tickets match your filters</p>
+            <div className="flex flex-col items-center justify-center py-20 text-gray-500">
+              <i className="ti ti-ticket-off text-[32px] text-gray-400 mb-2" aria-hidden="true" />
+              <p className="text-sm font-semibold">No active tickets match your filters</p>
               <button
                 onClick={() => { setSearch(''); setPriFilter('all'); }}
-                style={{ marginTop: 8, fontSize: 12, fontWeight: 600, color: '#2563EB', background: 'none', border: 'none', cursor: 'pointer' }}
+                className="mt-2 text-xs font-semibold text-blue-600 bg-none border-none cursor-pointer"
               >
                 Clear filters &amp; search
               </button>

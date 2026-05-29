@@ -11,17 +11,8 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" style={{ colorScheme: 'light', background: '#F8FAFC' }}>
-      <body
-        style={{
-          margin: 0,
-          padding: 0,
-          background: '#F8FAFC',
-          color: '#111827',
-          WebkitFontSmoothing: 'antialiased',
-          MozOsxFontSmoothing: 'grayscale',
-        }}
-      >
+    <html lang="en" className="bg-[#F8FAFC]">
+      <body className="m-0 p-0 bg-[#F8FAFC] text-gray-900 antialiased">
         <AgentProvider>
           <SocketProvider>
             <ToastProvider>

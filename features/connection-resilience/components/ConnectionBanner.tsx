@@ -9,30 +9,16 @@ export default function ConnectionBanner() {
 
   const isReconnecting = status === 'reconnecting';
 
-  const bg = isReconnecting ? '#D97706' : '#DC2626';
+  const bgClass = isReconnecting ? 'bg-amber-600' : 'bg-red-600';
 
   return (
     <div
       role="alert"
       aria-live="assertive"
-      className="banner-slide show"
-      style={{
-        width: '100%',
-        padding: '10px 20px',
-        display: 'flex',
-        alignItems: 'center',
-        gap: 10,
-        fontSize: 13,
-        fontWeight: 600,
-        background: bg,
-        color: '#fff',
-        zIndex: 20,
-        position: 'relative',
-      }}
+      className={`banner-slide show w-full py-2.5 px-5 flex items-center gap-2.5 text-[13px] font-semibold text-white z-20 relative ${bgClass}`}
     >
       <i
-        className={`ti ${isReconnecting ? 'ti-wifi' : 'ti-wifi-off'}`}
-        style={{ fontSize: 16 }}
+        className={`ti ${isReconnecting ? 'ti-wifi' : 'ti-wifi-off'} text-base`}
         aria-hidden="true"
       />
       <span>

@@ -87,18 +87,7 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
     <ToastContext.Provider value={{ toast, dismiss }}>
       {children}
       {mounted && createPortal(
-        <div
-          style={{
-            position: 'fixed',
-            bottom: 20,
-            right: 20,
-            zIndex: 100,
-            display: 'flex',
-            flexDirection: 'column',
-            gap: 10,
-            pointerEvents: 'none',
-          }}
-        >
+        <div className="fixed bottom-5 right-5 z-[100] flex flex-col gap-2.5 pointer-events-none">
           {state.visible.map(toastItem => (
             <NewTicketToast
               key={toastItem.id}

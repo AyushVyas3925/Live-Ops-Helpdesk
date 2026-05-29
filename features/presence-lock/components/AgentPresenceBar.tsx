@@ -7,8 +7,8 @@ interface AgentPresenceBarProps {
 }
 
 const PALETTE_BG = [
-  '#1e3a8a', '#4c1d95', '#78350f', '#134e4a',
-  '#1e3a5f', '#3b1764', '#7c2d12', '#14532d',
+  'bg-[#1e3a8a]', 'bg-[#4c1d95]', 'bg-[#78350f]', 'bg-[#134e4a]',
+  'bg-[#1e3a5f]', 'bg-[#3b1764]', 'bg-[#7c2d12]', 'bg-[#14532d]',
 ];
 
 function agentBg(agentId: string): string {
@@ -35,28 +35,12 @@ export default function AgentPresenceBar({ agents }: AgentPresenceBarProps) {
       {visible.map((agent, i) => (
         <div
           key={agent.agentId}
-          style={{ position: 'relative', marginLeft: i > 0 ? -6 : 0, zIndex: 10 - i }}
+          style={{ zIndex: 10 - i }}
+          className="relative"
           title={agent.editingTicketId ? `${agent.agentName} — editing #${agent.editingTicketId}` : agent.agentName}
         >
           <div
-            style={{
-              width: 32,
-              height: 32,
-              borderRadius: '50%',
-              background: agentBg(agent.agentId),
-              color: '#fff',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontSize: 11,
-              fontWeight: 700,
-              border: '2px solid #FFFFFF',
-              cursor: 'default',
-              transition: 'transform 0.15s',
-              userSelect: 'none',
-            }}
-            onMouseEnter={e => (e.currentTarget.style.transform = 'scale(1.1)')}
-            onMouseLeave={e => (e.currentTarget.style.transform = '')}
+            className={`w-8 h-8 rounded-full flex items-center justify-center text-[11px] font-bold border-2 border-white cursor-default transition-transform duration-150 select-none hover:scale-110 text-white ${agentBg(agent.agentId)}`}
             aria-label={agent.agentName}
           >
             {getInitials(agent.agentName)}
@@ -64,37 +48,13 @@ export default function AgentPresenceBar({ agents }: AgentPresenceBarProps) {
 
           <span
             aria-hidden="true"
-            style={{
-              position: 'absolute',
-              bottom: 0,
-              right: 0,
-              width: 9,
-              height: 9,
-              borderRadius: '50%',
-              background: agent.editingTicketId ? '#F59E0B' : '#22C55E',
-              border: '2px solid #FFFFFF',
-            }}
+            className={`absolute bottom-0 right-0 w-[9px] h-[9px] rounded-full border-2 border-white ${agent.editingTicketId ? 'bg-amber-500' : 'bg-green-500'}`}
           />
         </div>
       ))}
 
       {overflow > 0 && (
-        <div
-          style={{
-            width: 32,
-            height: 32,
-            borderRadius: '50%',
-            background: '#F3F4F6',
-            border: '2px solid #FFFFFF',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            fontSize: 11,
-            fontWeight: 700,
-            color: '#6B7280',
-            marginLeft: -6,
-          }}
-        >
+        <div className="w-8 h-8 rounded-full bg-gray-100 border-2 border-white flex items-center justify-center text-[11px] font-bold text-gray-500">
           +{overflow}
         </div>
       )}

@@ -14,16 +14,16 @@ function formatShortTime(dateString: string): string {
   return `${diffDays}d ago`;
 }
 
-const PRIORITY_PILL: Record<string, { background: string; color: string }> = {
-  critical: { background: '#FEE2E2', color: '#991B1B' },
-  high:     { background: '#FEF3C7', color: '#92400E' },
-  normal:   { background: '#EFF6FF', color: '#1D4ED8' },
+const PRIORITY_PILL: Record<string, string> = {
+  critical: 'bg-red-100 text-red-800',
+  high:     'bg-amber-100 text-amber-800',
+  normal:   'bg-blue-50 text-blue-700',
 };
 
-const STATUS_PILL: Record<string, { background: string; color: string }> = {
-  open:        { background: '#DCFCE7', color: '#166534' },
-  in_progress: { background: '#EFF6FF', color: '#1D4ED8' },
-  closed:      { background: '#F3F4F6', color: '#6B7280' },
+const STATUS_PILL: Record<string, string> = {
+  open:        'bg-green-100 text-green-800',
+  in_progress: 'bg-blue-50 text-blue-700',
+  closed:      'bg-gray-100 text-gray-500',
 };
 
 const STATUS_LABEL: Record<string, string> = {
@@ -31,19 +31,19 @@ const STATUS_LABEL: Record<string, string> = {
 };
 
 const AGENT_BG: Record<string, string> = {
-  'Marcus T.':  '#1e3a8a',
-  'Priya S.':   '#4c1d95',
-  'Jordan K.':  '#78350f',
-  'Aisha R.':   '#134e4a',
-  'Devon L.':   '#1e3a5f',
-  'Camille W.': '#3b1764',
-  'Ravi P.':    '#7c2d12',
-  'Nadia O.':   '#14532d',
-  'Tyler B.':   '#1e1b4b',
-  'Simone F.':  '#831843',
+  'Marcus T.':  'bg-[#1e3a8a]',
+  'Priya S.':   'bg-[#4c1d95]',
+  'Jordan K.':  'bg-[#78350f]',
+  'Aisha R.':   'bg-[#134e4a]',
+  'Devon L.':   'bg-[#1e3a5f]',
+  'Camille W.': 'bg-[#3b1764]',
+  'Ravi P.':    'bg-[#7c2d12]',
+  'Nadia O.':   'bg-[#14532d]',
+  'Tyler B.':   'bg-[#1e1b4b]',
+  'Simone F.':  'bg-[#831843]',
 };
 function agentBg(name: string) {
-  return AGENT_BG[name] ?? '#374151';
+  return AGENT_BG[name] ?? 'bg-gray-700';
 }
 function getInitials(name: string) {
   return name.split(' ').map(p => p[0]).join('').toUpperCase().slice(0, 2);
@@ -77,132 +77,69 @@ export default function TicketRow({ ticket, lock, isNew, onEdit, onUnlock }: Tic
 
   return (
     <div
-      className={rowClass}
+      className={`${rowClass} grid grid-cols-[80px_1fr_120px_120px_150px_100px_100px] gap-0 py-[13px] px-4 border-b border-[#F1F5F9] items-center relative ${isLockedByOther ? 'cursor-not-allowed' : 'cursor-pointer'}`}
       onClick={handleRowClick}
       role="row"
       aria-label={`Ticket ${ticket.id}: ${ticket.subject}`}
-      style={{
-        display: 'grid',
-        gridTemplateColumns: '80px 1fr 120px 120px 150px 100px 100px',
-        gap: 0,
-        padding: '13px 16px',
-        borderBottom: '1px solid #F1F5F9',
-        alignItems: 'center',
-        cursor: isLockedByOther ? 'not-allowed' : 'pointer',
-        position: 'relative',
-      }}
     >
-      <span
-        style={{
-          fontFamily: 'ui-monospace, monospace',
-          fontSize: 12,
-          color: '#6B7280',
-          fontWeight: 500,
-        }}
-      >
+      <span className="font-mono text-xs text-gray-500 font-medium">
         #{ticket.id}
       </span>
 
-      <div style={{ minWidth: 0, paddingRight: 8 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 7, minWidth: 0 }}>
-          <span
-            style={{
-              fontSize: 13,
-              fontWeight: 500,
-              color: isLockedByOther ? '#6B7280' : '#111827',
-              overflow: 'hidden',
-              textOverflow: 'ellipsis',
-              whiteSpace: 'nowrap',
-            }}
-          >
+      <div className="min-w-0 pr-2">
+        <div className="flex items-center gap-[7px] min-w-0">
+          <span className={`text-[13px] font-medium truncate ${isLockedByOther ? 'text-gray-500' : 'text-gray-900'}`}>
             {ticket.subject}
           </span>
 
           {isLockedByOther && (
             <span
-              style={{
-                display: 'inline-flex', alignItems: 'center', gap: 4,
-                fontSize: 10, fontWeight: 600,
-                color: '#991B1B', background: '#FEE2E2',
-                padding: '2px 7px', borderRadius: 999,
-                whiteSpace: 'nowrap', flexShrink: 0,
-              }}
+              className="inline-flex items-center gap-1 text-[10px] font-semibold text-red-800 bg-red-100 py-0.5 px-[7px] rounded-full whitespace-nowrap flex-shrink-0"
               aria-label={`Locked by ${lock!.agentName}`}
             >
-              <i className="ti ti-lock" style={{ fontSize: 10 }} aria-hidden="true" />
+              <i className="ti ti-lock text-[10px]" aria-hidden="true" />
               Locked by {lock!.agentName}
             </span>
           )}
           {isLockedByMe && (
-            <span
-              style={{
-                display: 'inline-flex', alignItems: 'center', gap: 4,
-                fontSize: 10, fontWeight: 600,
-                color: '#1D4ED8', background: '#EFF6FF',
-                padding: '2px 7px', borderRadius: 999,
-                whiteSpace: 'nowrap', flexShrink: 0,
-              }}
-            >
-              <i className="ti ti-lock" style={{ fontSize: 10 }} aria-hidden="true" />
+            <span className="inline-flex items-center gap-1 text-[10px] font-semibold text-blue-700 bg-blue-50 py-0.5 px-[7px] rounded-full whitespace-nowrap flex-shrink-0">
+              <i className="ti ti-lock text-[10px]" aria-hidden="true" />
               You
             </span>
           )}
         </div>
-        <p style={{ fontSize: 11, color: '#9CA3AF', display: 'flex', alignItems: 'center', gap: 3, marginTop: 2 }}>
+        <p className="text-[11px] text-gray-400 flex items-center gap-[3px] mt-0.5">
           <i className="ti ti-map-pin" />
           {ticket.location}
         </p>
       </div>
 
       <div className="flex items-center">
-        <span
-          style={{
-            display: 'inline-flex', alignItems: 'center', gap: 4,
-            padding: '3px 9px', borderRadius: 999,
-            fontSize: 11, fontWeight: 700, letterSpacing: '0.03em',
-            whiteSpace: 'nowrap',
-            ...priStyle,
-          }}
-        >
-          {ticket.priority === 'critical' && <i className="ti ti-alert-triangle" style={{ fontSize: 11 }} aria-hidden="true" />}
-          {ticket.priority === 'high'     && <i className="ti ti-arrow-up"       style={{ fontSize: 11 }} aria-hidden="true" />}
+        <span className={`inline-flex items-center gap-1 py-[3px] px-[9px] rounded-full text-[11px] font-bold tracking-[0.03em] whitespace-nowrap ${priStyle}`}>
+          {ticket.priority === 'critical' && <i className="ti ti-alert-triangle text-[11px]" aria-hidden="true" />}
+          {ticket.priority === 'high'     && <i className="ti ti-arrow-up text-[11px]" aria-hidden="true" />}
           {ticket.priority.toUpperCase()}
         </span>
       </div>
 
       <div>
-        <span
-          style={{
-            display: 'inline-flex', alignItems: 'center', gap: 4,
-            padding: '3px 9px', borderRadius: 999,
-            fontSize: 11, fontWeight: 700,
-            whiteSpace: 'nowrap',
-            ...stStyle,
-          }}
-        >
-          {ticket.status === 'open'        && <i className="ti ti-circle"  style={{ fontSize: 10 }} aria-hidden="true" />}
-          {ticket.status === 'in_progress' && <i className="ti ti-loader"  style={{ fontSize: 10 }} aria-hidden="true" />}
+        <span className={`inline-flex items-center gap-1 py-[3px] px-[9px] rounded-full text-[11px] font-bold whitespace-nowrap ${stStyle}`}>
+          {ticket.status === 'open'        && <i className="ti ti-circle text-[10px]" aria-hidden="true" />}
+          {ticket.status === 'in_progress' && <i className="ti ti-loader text-[10px]" aria-hidden="true" />}
           {STATUS_LABEL[ticket.status]}
         </span>
       </div>
 
-      <div style={{ display: 'flex', alignItems: 'center', gap: 7, fontSize: 12, color: isLockedByOther ? '#9CA3AF' : '#374151' }}>
-        <span
-          style={{
-            width: 26, height: 26, borderRadius: '50%',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            fontSize: 10, fontWeight: 700, flexShrink: 0,
-            background: agentBg(ticket.agentName), color: '#fff',
-          }}
-        >
+      <div className={`flex items-center gap-[7px] text-xs ${isLockedByOther ? 'text-gray-400' : 'text-gray-700'}`}>
+        <span className={`w-[26px] h-[26px] rounded-full flex items-center justify-center text-[10px] font-bold flex-shrink-0 text-white ${agentBg(ticket.agentName)}`}>
           {getInitials(ticket.agentName)}
         </span>
-        <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+        <span className="truncate">
           {ticket.agentName}
         </span>
       </div>
 
-      <span style={{ fontFamily: 'ui-monospace, monospace', fontSize: 11, color: '#9CA3AF', whiteSpace: 'nowrap' }}>
+      <span className="font-mono text-[11px] text-gray-400 whitespace-nowrap">
         {formatShortTime(ticket.createdAt)}
       </span>
 
@@ -215,7 +152,7 @@ export default function TicketRow({ ticket, lock, isNew, onEdit, onUnlock }: Tic
             aria-label={`Ticket ${ticket.id} is locked by ${lock?.agentName}`}
             className="btn-action-locked"
           >
-            <i className="ti ti-lock" style={{ fontSize: 12 }} aria-hidden="true" />
+            <i className="ti ti-lock text-xs" aria-hidden="true" />
             Locked
           </button>
         ) : isLockedByMe ? (
@@ -225,7 +162,7 @@ export default function TicketRow({ ticket, lock, isNew, onEdit, onUnlock }: Tic
             aria-label={`Release lock on ticket ${ticket.id}`}
             className="btn-action-release"
           >
-            <i className="ti ti-lock-open" style={{ fontSize: 12 }} aria-hidden="true" />
+            <i className="ti ti-lock-open text-xs" aria-hidden="true" />
             Release
           </button>
         ) : (
@@ -235,7 +172,7 @@ export default function TicketRow({ ticket, lock, isNew, onEdit, onUnlock }: Tic
             aria-label={`Edit ticket ${ticket.id}`}
             className="btn-action-edit"
           >
-            <i className="ti ti-edit" style={{ fontSize: 12 }} aria-hidden="true" />
+            <i className="ti ti-edit text-xs" aria-hidden="true" />
             Edit
           </button>
         )}

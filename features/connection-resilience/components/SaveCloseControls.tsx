@@ -25,14 +25,14 @@ export default function SaveCloseControls({ ticketId, onSave, onClose, isSaving 
   };
 
   return (
-    <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+    <div className="flex items-center gap-2">
       <button
         id={`close-btn-${ticketId}`}
         onClick={handleClose}
         aria-label="Close ticket editor without saving"
         className="btn-panel-close"
       >
-        <i className="ti ti-x" style={{ fontSize: 12 }} aria-hidden="true" />
+        <i className="ti ti-x text-xs" aria-hidden="true" />
         Close
       </button>
 
@@ -44,12 +44,12 @@ export default function SaveCloseControls({ ticketId, onSave, onClose, isSaving 
         className="btn-panel-save ctrl-btn-save"
       >
         {isSaving ? (
-          <svg className="animate-spin -ml-0.5 mr-1.5 h-3.5 w-3.5 text-white" fill="none" viewBox="0 0 24 24" style={{ display: 'inline-block', verticalAlign: 'middle' }}>
+          <svg className="animate-spin -ml-0.5 mr-1.5 h-3.5 w-3.5 text-white inline-block align-middle" fill="none" viewBox="0 0 24 24">
             <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
             <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
           </svg>
         ) : (
-          <i className="ti ti-device-floppy" style={{ fontSize: 12 }} aria-hidden="true" />
+          <i className="ti ti-device-floppy text-xs" aria-hidden="true" />
         )}
         {isSaving ? 'Saving...' : 'Save'}
       </button>

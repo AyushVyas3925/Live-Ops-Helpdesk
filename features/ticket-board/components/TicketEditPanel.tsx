@@ -23,16 +23,16 @@ interface TicketEditPanelProps {
   unlockTicket: (ticketId: string) => void;
 }
 
-const PRIORITY_PILL: Record<string, { background: string; color: string; border: string }> = {
-  critical: { background: '#FEE2E2', color: '#991B1B', border: '1px solid #FECACA' },
-  high:     { background: '#FEF3C7', color: '#92400E', border: '1px solid #FDE68A' },
-  normal:   { background: '#EFF6FF', color: '#1D4ED8', border: '1px solid #BFDBFE' },
+const PRIORITY_PILL: Record<string, string> = {
+  critical: 'bg-red-100 text-red-800 border border-red-200',
+  high:     'bg-amber-100 text-amber-800 border border-amber-200',
+  normal:   'bg-blue-50 text-blue-700 border border-blue-200',
 };
 
 const PRIORITY_BORDER: Record<string, string> = {
-  critical: '3px solid #EF4444',
-  high:     '3px solid #F59E0B',
-  normal:   '3px solid #3B82F6',
+  critical: 'border-l-[3px] border-l-red-500',
+  high:     'border-l-[3px] border-l-amber-500',
+  normal:   'border-l-[3px] border-l-blue-500',
 };
 
 export default function TicketEditPanel({ ticket, onSave, onClose, unlockTicket }: TicketEditPanelProps) {
@@ -128,78 +128,51 @@ export default function TicketEditPanel({ ticket, onSave, onClose, unlockTicket 
       aria-label={`Editing ticket ${ticket.id}`}
       className={`edit-panel-aside ${isClosing ? 'closing' : ''}`}
     >
-      <div
-        style={{
-          padding: '16px 20px',
-          borderBottom: '1px solid #E5E7EB',
-          background: '#F9FAFB',
-        }}
-      >
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6 }}>
-          <span style={{ fontFamily: 'ui-monospace, monospace', fontSize: 11, color: '#6B7280', fontWeight: 600 }}>
+      <div className="py-4 px-5 border-b border-gray-200 bg-gray-50">
+        <div className="flex items-center justify-between mb-1.5">
+          <span className="font-mono text-[11px] text-gray-500 font-semibold">
             #{ticket.id}
           </span>
-          <span
-            style={{
-              display: 'inline-flex', alignItems: 'center', gap: 4,
-              padding: '3px 8px', borderRadius: 999,
-              fontSize: 9, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em',
-              ...priStyle,
-            }}
-          >
-            <i className="ti ti-alert-triangle" style={{ fontSize: 9 }} aria-hidden="true" />
+          <span className={`inline-flex items-center gap-1 py-[3px] px-2 rounded-full text-[9px] font-bold uppercase tracking-[0.04em] ${priStyle}`}>
+            <i className="ti ti-alert-triangle text-[9px]" aria-hidden="true" />
             {ticket.priority}
           </span>
         </div>
 
-        <h2 style={{ fontWeight: 700, color: '#111827', fontSize: 15, lineHeight: 1.35, marginBottom: 10 }}>
+        <h2 className="font-bold text-gray-900 text-[15px] leading-[1.35] mb-2.5">
           {ticket.subject}
         </h2>
 
-        <div
-          style={{
-            display: 'flex', flexWrap: 'wrap', alignItems: 'center',
-            gap: '6px 14px',
-            fontSize: 10, fontWeight: 500, color: '#6B7280',
-          }}
-        >
-          <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-            <i className="ti ti-map-pin" style={{ opacity: 0.7 }} aria-hidden="true" />
+        <div className="flex flex-wrap items-center gap-y-1.5 gap-x-3.5 text-[10px] font-medium text-gray-500">
+          <span className="flex items-center gap-1">
+            <i className="ti ti-map-pin opacity-70" aria-hidden="true" />
             {ticket.location}
           </span>
-          <span style={{ display: 'flex', alignItems: 'center', gap: 4, fontFamily: 'ui-monospace, monospace' }}>
-            <i className="ti ti-clock" style={{ opacity: 0.7 }} aria-hidden="true" />
+          <span className="flex items-center gap-1 font-mono">
+            <i className="ti ti-clock opacity-70" aria-hidden="true" />
             {formatShortTime(ticket.createdAt)}
           </span>
-          <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-            <i className="ti ti-user" style={{ opacity: 0.7 }} aria-hidden="true" />
+          <span className="flex items-center gap-1">
+            <i className="ti ti-user opacity-70" aria-hidden="true" />
             Assignee: {ticket.agentName}
           </span>
         </div>
       </div>
 
-      <div style={{ padding: '14px 20px', borderBottom: '1px solid #E5E7EB', background: '#FFFFFF' }}>
-        <p style={{ fontSize: 10, fontWeight: 700, color: '#4B5563', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 6 }}>
+      <div className="py-3.5 px-5 border-b border-gray-200 bg-white">
+        <p className="text-[10px] font-bold text-gray-600 uppercase tracking-[0.05em] mb-1.5">
           Cargo details / Issue Description
         </p>
-        <p
-          style={{
-            fontSize: 12, color: '#374151', lineHeight: 1.6,
-            background: '#F8FAFC', padding: '12px 14px',
-            borderRadius: 6, 
-            border: '1px solid #E2E8F0',
-            borderLeft: PRIORITY_BORDER[ticket.priority] ?? '3px solid #3B82F6',
-          }}
-        >
+        <p className={`text-xs text-gray-700 leading-relaxed bg-[#F8FAFC] py-3 px-3.5 rounded-md border border-gray-200 ${PRIORITY_BORDER[ticket.priority] ?? 'border-l-[3px] border-l-blue-500'}`}>
           {ticket.description}
         </p>
       </div>
 
-      <div style={{ flex: 1, overflowY: 'auto', padding: '20px 20px', display: 'flex', flexDirection: 'column', gap: 20, background: '#F8FAFC' }}>
+      <div className="flex-1 overflow-y-auto p-5 flex flex-col gap-5 bg-[#F8FAFC]">
         <div>
           <label
             htmlFor={`notes-${ticket.id}`}
-            style={{ display: 'block', fontSize: 10, fontWeight: 700, color: '#4B5563', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 6 }}
+            className="block text-[10px] font-bold text-gray-600 uppercase tracking-[0.05em] mb-1.5"
           >
             Agent Operational Notes
           </label>
@@ -217,7 +190,7 @@ export default function TicketEditPanel({ ticket, onSave, onClose, unlockTicket 
         <div>
           <label
             htmlFor={`resolution-${ticket.id}`}
-            style={{ display: 'block', fontSize: 10, fontWeight: 700, color: '#4B5563', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 6 }}
+            className="block text-[10px] font-bold text-gray-600 uppercase tracking-[0.05em] mb-1.5"
           >
             Resolution Protocol
           </label>
@@ -232,16 +205,7 @@ export default function TicketEditPanel({ ticket, onSave, onClose, unlockTicket 
         </div>
       </div>
 
-      <div
-        style={{
-          padding: '14px 20px',
-          borderTop: '1px solid #E5E7EB',
-          background: '#F9FAFB',
-          display: 'flex',
-          justifyContent: 'flex-end',
-          boxShadow: '0 -2px 10px rgba(0,0,0,0.04)',
-        }}
-      >
+      <div className="py-3.5 px-5 border-t border-gray-200 bg-gray-50 flex justify-end shadow-[0_-2px_10px_rgba(0,0,0,0.04)]">
         <SaveCloseControls
           ticketId={ticket.id}
           onSave={handleSave}
